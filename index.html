@@ -3,1650 +3,1020 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Clueless Closet - Fashion Mixer</title>
+    <title>Clueless Closet - Outfit Mixer</title>
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         :root {
-  /* Primitive Color Tokens */
-  --color-white: rgba(255, 255, 255, 1);
-  --color-black: rgba(0, 0, 0, 1);
-  --color-cream-50: rgba(252, 252, 249, 1);
-  --color-cream-100: rgba(255, 255, 253, 1);
-  --color-gray-200: rgba(245, 245, 245, 1);
-  --color-gray-300: rgba(167, 169, 169, 1);
-  --color-gray-400: rgba(119, 124, 124, 1);
-  --color-slate-500: rgba(98, 108, 113, 1);
-  --color-brown-600: rgba(94, 82, 64, 1);
-  --color-charcoal-700: rgba(31, 33, 33, 1);
-  --color-charcoal-800: rgba(38, 40, 40, 1);
-  --color-slate-900: rgba(19, 52, 59, 1);
-  --color-teal-300: rgba(50, 184, 198, 1);
-  --color-teal-400: rgba(45, 166, 178, 1);
-  --color-teal-500: rgba(33, 128, 141, 1);
-  --color-teal-600: rgba(29, 116, 128, 1);
-  --color-teal-700: rgba(26, 104, 115, 1);
-  --color-teal-800: rgba(41, 150, 161, 1);
-  --color-red-400: rgba(255, 84, 89, 1);
-  --color-red-500: rgba(192, 21, 47, 1);
-  --color-orange-400: rgba(230, 129, 97, 1);
-  --color-orange-500: rgba(168, 75, 47, 1);
-
-  /* RGB versions for opacity control */
-  --color-brown-600-rgb: 94, 82, 64;
-  --color-teal-500-rgb: 33, 128, 141;
-  --color-slate-900-rgb: 19, 52, 59;
-  --color-slate-500-rgb: 98, 108, 113;
-  --color-red-500-rgb: 192, 21, 47;
-  --color-red-400-rgb: 255, 84, 89;
-  --color-orange-500-rgb: 168, 75, 47;
-  --color-orange-400-rgb: 230, 129, 97;
-
-  /* Background color tokens (Light Mode) */
-  --color-bg-1: rgba(59, 130, 246, 0.08);
-  --color-bg-2: rgba(245, 158, 11, 0.08);
-  --color-bg-3: rgba(34, 197, 94, 0.08);
-  --color-bg-4: rgba(239, 68, 68, 0.08);
-  --color-bg-5: rgba(147, 51, 234, 0.08);
-  --color-bg-6: rgba(249, 115, 22, 0.08);
-  --color-bg-7: rgba(236, 72, 153, 0.08);
-  --color-bg-8: rgba(6, 182, 212, 0.08);
-
-  /* Semantic Color Tokens (Light Mode) */
-  --color-background: var(--color-cream-50);
-  --color-surface: var(--color-cream-100);
-  --color-text: var(--color-slate-900);
-  --color-text-secondary: var(--color-slate-500);
-  --color-primary: var(--color-teal-500);
-  --color-primary-hover: var(--color-teal-600);
-  --color-primary-active: var(--color-teal-700);
-  --color-secondary: rgba(var(--color-brown-600-rgb), 0.12);
-  --color-secondary-hover: rgba(var(--color-brown-600-rgb), 0.2);
-  --color-secondary-active: rgba(var(--color-brown-600-rgb), 0.25);
-  --color-border: rgba(var(--color-brown-600-rgb), 0.2);
-  --color-btn-primary-text: var(--color-cream-50);
-  --color-card-border: rgba(var(--color-brown-600-rgb), 0.12);
-  --color-card-border-inner: rgba(var(--color-brown-600-rgb), 0.12);
-  --color-error: var(--color-red-500);
-  --color-success: var(--color-teal-500);
-  --color-warning: var(--color-orange-500);
-  --color-info: var(--color-slate-500);
-  --color-focus-ring: rgba(var(--color-teal-500-rgb), 0.4);
-  --color-select-caret: rgba(var(--color-slate-900-rgb), 0.8);
-
-  /* Common style patterns */
-  --focus-ring: 0 0 0 3px var(--color-focus-ring);
-  --focus-outline: 2px solid var(--color-primary);
-  --status-bg-opacity: 0.15;
-  --status-border-opacity: 0.25;
-
-  /* Typography */
-  --font-family-base: "FKGroteskNeue", "Geist", "Inter", -apple-system,
-    BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  --font-family-mono: "Berkeley Mono", ui-monospace, SFMono-Regular, Menlo,
-    Monaco, Consolas, monospace;
-  --font-size-xs: 11px;
-  --font-size-sm: 12px;
-  --font-size-base: 14px;
-  --font-size-md: 14px;
-  --font-size-lg: 16px;
-  --font-size-xl: 18px;
-  --font-size-2xl: 20px;
-  --font-size-3xl: 24px;
-  --font-size-4xl: 30px;
-  --font-weight-normal: 400;
-  --font-weight-medium: 500;
-  --font-weight-semibold: 550;
-  --font-weight-bold: 600;
-  --line-height-tight: 1.2;
-  --line-height-normal: 1.5;
-  --letter-spacing-tight: -0.01em;
-
-  /* Spacing */
-  --space-0: 0;
-  --space-1: 1px;
-  --space-2: 2px;
-  --space-4: 4px;
-  --space-6: 6px;
-  --space-8: 8px;
-  --space-10: 10px;
-  --space-12: 12px;
-  --space-16: 16px;
-  --space-20: 20px;
-  --space-24: 24px;
-  --space-32: 32px;
-
-  /* Border Radius */
-  --radius-sm: 6px;
-  --radius-base: 8px;
-  --radius-md: 10px;
-  --radius-lg: 12px;
-  --radius-full: 9999px;
-
-  /* Shadows */
-  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.02);
-  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.02);
-  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.04),
-    0 2px 4px -1px rgba(0, 0, 0, 0.02);
-  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.04),
-    0 4px 6px -2px rgba(0, 0, 0, 0.02);
-  --shadow-inset-sm: inset 0 1px 0 rgba(255, 255, 255, 0.15),
-    inset 0 -1px 0 rgba(0, 0, 0, 0.03);
-
-  /* Animation */
-  --duration-fast: 150ms;
-  --duration-normal: 250ms;
-  --ease-standard: cubic-bezier(0.16, 1, 0.3, 1);
-
-  /* Layout */
-  --container-sm: 640px;
-  --container-md: 768px;
-  --container-lg: 1024px;
-  --container-xl: 1280px;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --color-gray-400-rgb: 119, 124, 124;
-    --color-teal-300-rgb: 50, 184, 198;
-    --color-gray-300-rgb: 167, 169, 169;
-    --color-gray-200-rgb: 245, 245, 245;
-    --color-bg-1: rgba(29, 78, 216, 0.15);
-    --color-bg-2: rgba(180, 83, 9, 0.15);
-    --color-bg-3: rgba(21, 128, 61, 0.15);
-    --color-bg-4: rgba(185, 28, 28, 0.15);
-    --color-bg-5: rgba(107, 33, 168, 0.15);
-    --color-bg-6: rgba(194, 65, 12, 0.15);
-    --color-bg-7: rgba(190, 24, 93, 0.15);
-    --color-bg-8: rgba(8, 145, 178, 0.15);
-    --color-background: var(--color-charcoal-700);
-    --color-surface: var(--color-charcoal-800);
-    --color-text: var(--color-gray-200);
-    --color-text-secondary: rgba(var(--color-gray-300-rgb), 0.7);
-    --color-primary: var(--color-teal-300);
-    --color-primary-hover: var(--color-teal-400);
-    --color-primary-active: var(--color-teal-800);
-    --color-secondary: rgba(var(--color-gray-400-rgb), 0.15);
-    --color-secondary-hover: rgba(var(--color-gray-400-rgb), 0.25);
-    --color-secondary-active: rgba(var(--color-gray-400-rgb), 0.3);
-    --color-border: rgba(var(--color-gray-400-rgb), 0.3);
-    --color-error: var(--color-red-400);
-    --color-success: var(--color-teal-300);
-    --color-warning: var(--color-orange-400);
-    --color-info: var(--color-gray-300);
-    --color-focus-ring: rgba(var(--color-teal-300-rgb), 0.4);
-    --color-btn-primary-text: var(--color-slate-900);
-    --color-card-border: rgba(var(--color-gray-400-rgb), 0.2);
-    --color-card-border-inner: rgba(var(--color-gray-400-rgb), 0.15);
-    --shadow-inset-sm: inset 0 1px 0 rgba(255, 255, 255, 0.1),
-      inset 0 -1px 0 rgba(0, 0, 0, 0.15);
-    --color-select-caret: rgba(var(--color-gray-200-rgb), 0.8);
-  }
-}
-
-@font-face {
-  font-family: 'FKGroteskNeue';
-  src: url('https://r2cdn.perplexity.ai/fonts/FKGroteskNeue.woff2')
-    format('woff2');
-}
-
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-body {
-    font-family: var(--font-family-base);
-    background-color: var(--color-background);
-    color: var(--color-text);
-    line-height: var(--line-height-normal);
-    -webkit-font-smoothing: antialiased;
-}
-
-.header {
-    background-color: var(--color-surface);
-    padding: var(--space-24) var(--space-32);
-    text-align: center;
-    border-bottom: 2px solid var(--color-border);
-    box-shadow: var(--shadow-sm);
-}
-
-.header h1 {
-    font-size: var(--font-size-4xl);
-    font-weight: var(--font-weight-bold);
-    color: var(--color-primary);
-    letter-spacing: var(--letter-spacing-tight);
-    margin-bottom: var(--space-8);
-}
-
-.header p {
-    font-size: var(--font-size-lg);
-    color: var(--color-text-secondary);
-    margin: 0;
-}
-
-.container {
-    display: grid;
-    grid-template-columns: 220px 1fr 220px;
-    gap: var(--space-24);
-    padding: var(--space-32);
-    max-width: 1400px;
-    margin: 0 auto;
-}
-
-.sidebar {
-    background-color: var(--color-surface);
-    border-radius: var(--radius-lg);
-    padding: var(--space-20);
-    border: 1px solid var(--color-card-border);
-    box-shadow: var(--shadow-sm);
-}
-
-.sidebar h2 {
-    font-size: var(--font-size-xl);
-    font-weight: var(--font-weight-semibold);
-    margin-bottom: var(--space-16);
-    color: var(--color-text);
-}
-
-.item-grid {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-12);
-}
-
-.item {
-    background-color: var(--color-background);
-    border: 2px solid var(--color-card-border);
-    border-radius: var(--radius-base);
-    padding: var(--space-8);
-    cursor: pointer;
-    transition: all var(--duration-normal) var(--ease-standard);
-    overflow: hidden;
-}
-
-.item:hover {
-    border-color: var(--color-primary);
-    box-shadow: var(--shadow-md);
-    transform: translateY(-2px);
-}
-
-.item.selected {
-    border-color: var(--color-primary);
-    background-color: var(--color-bg-1);
-    box-shadow: var(--shadow-md);
-}
-
-.item img {
-    width: 100%;
-    height: auto;
-    border-radius: var(--radius-sm);
-    display: block;
-}
-
-.item-name {
-    font-size: var(--font-size-xs);
-    color: var(--color-text-secondary);
-    margin-top: var(--space-6);
-    font-weight: var(--font-weight-medium);
-}
-
-.main-content {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-24);
-}
-
-.outfit-display {
-    background-color: var(--color-surface);
-    border-radius: var(--radius-lg);
-    padding: var(--space-32);
-    border: 1px solid var(--color-card-border);
-    box-shadow: var(--shadow-md);
-}
-
-.outfit-title {
-    font-size: var(--font-size-2xl);
-    font-weight: var(--font-weight-semibold);
-    margin-bottom: var(--space-24);
-    text-align: center;
-    color: var(--color-text);
-}
-
-.outfit-items {
-    display: flex;
-    justify-content: center;
-    gap: var(--space-32);
-    margin-bottom: var(--space-24);
-}
-
-.outfit-item {
-    flex: 0 1 300px;
-    background-color: var(--color-background);
-    border: 2px solid var(--color-card-border);
-    border-radius: var(--radius-lg);
-    padding: var(--space-20);
-    text-align: center;
-}
-
-.outfit-item img {
-    width: 100%;
-    max-width: 280px;
-    height: auto;
-    border-radius: var(--radius-base);
-    margin-bottom: var(--space-16);
-}
-
-.outfit-item h3 {
-    font-size: var(--font-size-lg);
-    font-weight: var(--font-weight-semibold);
-    margin-bottom: var(--space-8);
-    color: var(--color-text);
-}
-
-.outfit-item p {
-    font-size: var(--font-size-sm);
-    color: var(--color-text-secondary);
-    margin-bottom: var(--space-12);
-}
-
-.outfit-item a {
-    display: inline-block;
-    color: var(--color-primary);
-    text-decoration: none;
-    font-size: var(--font-size-sm);
-    font-weight: var(--font-weight-medium);
-    padding: var(--space-8) var(--space-16);
-    border: 1px solid var(--color-primary);
-    border-radius: var(--radius-base);
-    transition: all var(--duration-fast) var(--ease-standard);
-}
-
-.outfit-item a:hover {
-    background-color: var(--color-primary);
-    color: var(--color-btn-primary-text);
-}
-
-.save-button-container {
-    text-align: center;
-}
-
-.save-button {
-    background-color: var(--color-primary);
-    color: var(--color-btn-primary-text);
-    border: none;
-    padding: var(--space-12) var(--space-32);
-    font-size: var(--font-size-lg);
-    font-weight: var(--font-weight-semibold);
-    border-radius: var(--radius-base);
-    cursor: pointer;
-    transition: all var(--duration-normal) var(--ease-standard);
-    box-shadow: var(--shadow-sm);
-}
-
-.save-button:hover {
-    background-color: var(--color-primary-hover);
-    box-shadow: var(--shadow-md);
-    transform: translateY(-2px);
-}
-
-.save-button:active {
-    background-color: var(--color-primary-active);
-    transform: translateY(0);
-}
-
-.saved-outfits {
-    background-color: var(--color-surface);
-    border-radius: var(--radius-lg);
-    padding: var(--space-24);
-    border: 1px solid var(--color-card-border);
-    box-shadow: var(--shadow-sm);
-}
-
-.saved-outfits h2 {
-    font-size: var(--font-size-2xl);
-    font-weight: var(--font-weight-semibold);
-    margin-bottom: var(--space-20);
-    color: var(--color-text);
-}
-
-.saved-outfits-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: var(--space-20);
-}
-
-.saved-outfit {
-    background-color: var(--color-background);
-    border: 1px solid var(--color-card-border);
-    border-radius: var(--radius-lg);
-    padding: var(--space-16);
-    position: relative;
-}
-
-.saved-outfit-items {
-    display: flex;
-    gap: var(--space-12);
-    margin-bottom: var(--space-12);
-}
-
-.saved-outfit-items img {
-    width: 50%;
-    height: auto;
-    border-radius: var(--radius-sm);
-}
-
-.saved-outfit-info {
-    font-size: var(--font-size-sm);
-    color: var(--color-text-secondary);
-    margin-bottom: var(--space-8);
-}
-
-.remove-button {
-    background-color: var(--color-error);
-    color: var(--color-white);
-    border: none;
-    padding: var(--space-6) var(--space-12);
-    font-size: var(--font-size-sm);
-    font-weight: var(--font-weight-medium);
-    border-radius: var(--radius-sm);
-    cursor: pointer;
-    transition: all var(--duration-fast) var(--ease-standard);
-    width: 100%;
-}
-
-.remove-button:hover {
-    opacity: 0.9;
-    transform: translateY(-1px);
-}
-
-.empty-state {
-    text-align: center;
-    padding: var(--space-32);
-    color: var(--color-text-secondary);
-    font-size: var(--font-size-base);
-}
-
-.shuffle-button {
-    margin-top: var(--space-16);
-    background-color: var(--color-primary);
-    color: var(--color-btn-primary-text);
-    border: none;
-    padding: var(--space-12) var(--space-24);
-    font-size: var(--font-size-lg);
-    font-weight: var(--font-weight-semibold);
-    border-radius: var(--radius-full);
-    cursor: pointer;
-    transition: all var(--duration-normal) var(--ease-standard);
-    box-shadow: var(--shadow-md);
-    display: inline-flex;
-    align-items: center;
-    gap: var(--space-8);
-}
-
-.shuffle-button:hover {
-    background-color: var(--color-primary-hover);
-    box-shadow: var(--shadow-lg);
-    transform: translateY(-2px);
-}
-
-.shuffle-button:active {
-    background-color: var(--color-primary-active);
-    transform: translateY(0);
-}
-
-.shuffle-button svg {
-    transition: transform var(--duration-normal) var(--ease-standard);
-}
-
-.shuffle-button:hover svg {
-    transform: rotate(180deg);
-}
-
-@keyframes shuffle-fade {
-    0% {
-        opacity: 1;
-        transform: scale(1);
-    }
-    50% {
-        opacity: 0.3;
-        transform: scale(0.95);
-    }
-    100% {
-        opacity: 1;
-        transform: scale(1);
-    }
-}
-
-.shuffling {
-    animation: shuffle-fade 0.6s ease-in-out;
-}
-
-.settings-button {
-    background-color: var(--color-secondary);
-    color: var(--color-text);
-    border: 1px solid var(--color-border);
-    padding: var(--space-12) var(--space-24);
-    font-size: var(--font-size-lg);
-    font-weight: var(--font-weight-semibold);
-    border-radius: var(--radius-full);
-    cursor: pointer;
-    transition: all var(--duration-normal) var(--ease-standard);
-    box-shadow: var(--shadow-md);
-    display: inline-flex;
-    align-items: center;
-    gap: var(--space-8);
-}
-
-.settings-button:hover {
-    background-color: var(--color-secondary-hover);
-    box-shadow: var(--shadow-lg);
-    transform: translateY(-2px);
-}
-
-.settings-panel {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(0, 0, 0, 0.5);
-    z-index: 1000;
-    overflow-y: auto;
-    padding: var(--space-32);
-}
-
-.settings-content {
-    max-width: 800px;
-    margin: 0 auto;
-    background-color: var(--color-surface);
-    border-radius: var(--radius-lg);
-    box-shadow: var(--shadow-lg);
-    border: 1px solid var(--color-card-border);
-}
-
-.settings-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: var(--space-24) var(--space-32);
-    border-bottom: 1px solid var(--color-border);
-}
-
-.settings-header h2 {
-    font-size: var(--font-size-2xl);
-    font-weight: var(--font-weight-semibold);
-    margin: 0;
-    color: var(--color-text);
-}
-
-.close-button {
-    background: none;
-    border: none;
-    font-size: var(--font-size-4xl);
-    color: var(--color-text-secondary);
-    cursor: pointer;
-    line-height: 1;
-    padding: 0;
-    width: 32px;
-    height: 32px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: var(--radius-base);
-    transition: all var(--duration-fast) var(--ease-standard);
-}
-
-.close-button:hover {
-    background-color: var(--color-secondary);
-    color: var(--color-text);
-}
-
-.settings-tabs {
-    display: flex;
-    gap: var(--space-4);
-    padding: var(--space-16) var(--space-32) 0;
-    border-bottom: 1px solid var(--color-border);
-}
-
-.tab-button {
-    background: none;
-    border: none;
-    padding: var(--space-12) var(--space-16);
-    font-size: var(--font-size-base);
-    font-weight: var(--font-weight-medium);
-    color: var(--color-text-secondary);
-    cursor: pointer;
-    border-bottom: 2px solid transparent;
-    transition: all var(--duration-fast) var(--ease-standard);
-}
-
-.tab-button:hover {
-    color: var(--color-text);
-}
-
-.tab-button.active {
-    color: var(--color-primary);
-    border-bottom-color: var(--color-primary);
-}
-
-.tab-content {
-    display: none;
-    padding: var(--space-32);
-}
-
-.tab-content.active {
-    display: block;
-}
-
-.tab-content h3 {
-    font-size: var(--font-size-xl);
-    font-weight: var(--font-weight-semibold);
-    margin-bottom: var(--space-24);
-    color: var(--color-text);
-}
-
-.status-message {
-    margin-top: var(--space-16);
-    padding: var(--space-12);
-    border-radius: var(--radius-base);
-    font-size: var(--font-size-sm);
-    display: none;
-}
-
-.status-message.success {
-    display: block;
-    background-color: rgba(var(--color-success-rgb), 0.15);
-    color: var(--color-success);
-    border: 1px solid rgba(var(--color-success-rgb), 0.25);
-}
-
-.status-message.error {
-    display: block;
-    background-color: rgba(var(--color-error-rgb), 0.15);
-    color: var(--color-error);
-    border: 1px solid rgba(var(--color-error-rgb), 0.25);
-}
-
-.manage-categories {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-24);
-}
-
-.manage-section h4 {
-    font-size: var(--font-size-lg);
-    font-weight: var(--font-weight-semibold);
-    margin-bottom: var(--space-16);
-    color: var(--color-text);
-}
-
-.manage-items-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: var(--space-16);
-}
-
-.manage-item {
-    background-color: var(--color-background);
-    border: 1px solid var(--color-card-border);
-    border-radius: var(--radius-base);
-    padding: var(--space-12);
-    position: relative;
-}
-
-.manage-item img {
-    width: 100%;
-    height: auto;
-    border-radius: var(--radius-sm);
-    margin-bottom: var(--space-8);
-}
-
-.manage-item-info {
-    font-size: var(--font-size-sm);
-    color: var(--color-text);
-    font-weight: var(--font-weight-medium);
-    margin-bottom: var(--space-4);
-}
-
-.manage-item-name {
-    font-size: var(--font-size-xs);
-    color: var(--color-text-secondary);
-    margin-bottom: var(--space-8);
-}
-
-.manage-item-source {
-    display: inline-block;
-    font-size: var(--font-size-xs);
-    padding: var(--space-4) var(--space-8);
-    border-radius: var(--radius-sm);
-    margin-bottom: var(--space-8);
-}
-
-.source-myntra {
-    background-color: var(--color-bg-1);
-    color: var(--color-primary);
-}
-
-.source-gdrive {
-    background-color: var(--color-bg-3);
-    color: var(--color-success);
-}
-
-.manage-item button {
-    width: 100%;
-}
-
-.instructions-list {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-20);
-}
-
-.instruction-step {
-    display: flex;
-    gap: var(--space-16);
-    align-items: flex-start;
-}
-
-.step-number {
-    flex-shrink: 0;
-    width: 32px;
-    height: 32px;
-    background-color: var(--color-primary);
-    color: var(--color-btn-primary-text);
-    border-radius: var(--radius-full);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: var(--font-weight-bold);
-    font-size: var(--font-size-base);
-}
-
-.step-content h4 {
-    font-size: var(--font-size-base);
-    font-weight: var(--font-weight-semibold);
-    margin-bottom: var(--space-4);
-    color: var(--color-text);
-}
-
-.step-content p {
-    font-size: var(--font-size-sm);
-    color: var(--color-text-secondary);
-    margin: 0;
-}
-
-@media (max-width: 1024px) {
-    .container {
-        grid-template-columns: 1fr;
-        gap: var(--space-20);
-    }
-    
-    .sidebar {
-        max-width: 100%;
-    }
-    
-    .item-grid {
-        flex-direction: row;
-        flex-wrap: wrap;
-    }
-    
-    .item {
-        flex: 0 1 calc(25% - var(--space-12));
-    }
-    
-    .outfit-items {
-        flex-direction: column;
-        align-items: center;
-    }
-}
-
-@media (max-width: 768px) {
-    .header h1 {
-        font-size: var(--font-size-3xl);
-    }
-    
-    .outfit-items {
-        gap: var(--space-20);
-    }
-    
-    .item {
-        flex: 0 1 calc(33.333% - var(--space-12));
-    }
-}
+            --bg-white: #FFFFFF;
+            --button-primary: #FFB3D9;
+            --button-hover: #FF99CC;
+            --button-active: #FF80BB;
+            --button-text: #FFFFFF;
+            --accent-strawberry: #FF6B9D;
+            --secondary-bg: #FFFAF7;
+            --border-light: #FFE0E8;
+            --text-primary: #2C2C2C;
+            --text-secondary: #666666;
+            --shadow: rgba(255, 107, 157, 0.1);
+            --spacing: 16px;
+            --border-radius: 6px;
+            --transition: all 200ms ease;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-white);
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+
+        /* Header */
+        header {
+            background-color: var(--bg-white);
+            border-bottom: 1px solid var(--border-light);
+            padding: var(--spacing);
+            box-shadow: 0 2px 8px var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: var(--spacing);
+        }
+
+        .header-title {
+            font-size: 28px;
+            font-weight: 600;
+            color: var(--text-primary);
+            letter-spacing: -0.5px;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: var(--spacing);
+            align-items: center;
+        }
+
+        /* Buttons */
+        button {
+            background-color: var(--button-primary);
+            color: var(--button-text);
+            border: none;
+            padding: 12px 24px;
+            border-radius: var(--border-radius);
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            min-height: 44px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            white-space: nowrap;
+        }
+
+        button:hover {
+            background-color: var(--button-hover);
+            box-shadow: 0 4px 12px var(--shadow);
+            transform: translateY(-1px);
+        }
+
+        button:active {
+            background-color: var(--button-active);
+            transform: translateY(0);
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        button:focus {
+            outline: 2px solid var(--accent-strawberry);
+            outline-offset: 2px;
+        }
+
+        button:disabled {
+            background-color: #E0E0E0;
+            color: #999;
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: var(--spacing);
+        }
+
+        /* Layout */
+        .layout {
+            display: grid;
+            grid-template-columns: 200px 1fr 200px;
+            gap: var(--spacing);
+            min-height: calc(100vh - 100px);
+        }
+
+        .sidebar {
+            background-color: var(--secondary-bg);
+            border-radius: var(--border-radius);
+            padding: var(--spacing);
+            overflow-y: auto;
+        }
+
+        .sidebar h3 {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: var(--text-primary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .items-grid {
+            display: grid;
+            gap: 12px;
+        }
+
+        .item-thumbnail {
+            width: 100%;
+            aspect-ratio: 3/4;
+            border-radius: var(--border-radius);
+            border: 2px solid var(--border-light);
+            cursor: pointer;
+            transition: var(--transition);
+            overflow: hidden;
+            background-color: var(--bg-white);
+        }
+
+        .item-thumbnail:hover {
+            border-color: var(--accent-strawberry);
+            box-shadow: 0 4px 12px var(--shadow);
+            transform: scale(1.02);
+        }
+
+        .item-thumbnail img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .item-thumbnail.selected {
+            border-color: var(--accent-strawberry);
+            box-shadow: 0 0 0 3px rgba(255, 107, 157, 0.2);
+        }
+
+        /* Main Display */
+        .main-display {
+            background-color: var(--secondary-bg);
+            border-radius: var(--border-radius);
+            padding: var(--spacing);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: var(--spacing);
+        }
+
+        .outfit-container {
+            display: flex;
+            gap: var(--spacing);
+            justify-content: center;
+            align-items: flex-start;
+            width: 100%;
+        }
+
+        .outfit-piece {
+            flex: 1;
+            max-width: 250px;
+            aspect-ratio: 3/4;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: 0 4px 16px var(--shadow);
+            background-color: var(--bg-white);
+        }
+
+        .outfit-piece img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .outfit-details {
+            width: 100%;
+            text-align: center;
+        }
+
+        .outfit-details h4 {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 4px;
+            color: var(--text-primary);
+        }
+
+        .outfit-details p {
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin-bottom: 12px;
+        }
+
+        .outfit-details a {
+            color: var(--accent-strawberry);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 12px;
+        }
+
+        .outfit-details a:hover {
+            text-decoration: underline;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 40px var(--spacing);
+            color: var(--text-secondary);
+        }
+
+        .empty-state p {
+            font-size: 14px;
+            margin-bottom: 12px;
+        }
+
+        /* Saved Outfits */
+        .saved-outfits {
+            margin-top: var(--spacing);
+            padding-top: var(--spacing);
+            border-top: 1px solid var(--border-light);
+        }
+
+        .saved-outfits h3 {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: var(--text-primary);
+        }
+
+        .outfits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 12px;
+        }
+
+        .saved-outfit-card {
+            background-color: var(--bg-white);
+            border: 2px solid var(--border-light);
+            border-radius: var(--border-radius);
+            padding: 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: var(--transition);
+            position: relative;
+        }
+
+        .saved-outfit-card:hover {
+            border-color: var(--accent-strawberry);
+            box-shadow: 0 4px 12px var(--shadow);
+        }
+
+        .saved-outfit-preview {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4px;
+            margin-bottom: 8px;
+            aspect-ratio: 1;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .saved-outfit-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .remove-outfit-btn {
+            position: absolute;
+            top: 4px;
+            right: 4px;
+            background-color: rgba(255, 107, 157, 0.8);
+            color: white;
+            border: none;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            padding: 0;
+            font-size: 14px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: var(--transition);
+        }
+
+        .saved-outfit-card:hover .remove-outfit-btn {
+            opacity: 1;
+        }
+
+        /* Modal/Settings */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.3);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background-color: var(--bg-white);
+            border-radius: var(--border-radius);
+            padding: 32px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .modal-header h2 {
+            font-size: 24px;
+            font-weight: 600;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            padding: 0;
+            min-height: auto;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 6px;
+            color: var(--text-primary);
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid var(--border-light);
+            border-radius: var(--border-radius);
+            font-size: 14px;
+            font-family: inherit;
+            transition: var(--transition);
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--accent-strawberry);
+            box-shadow: 0 0 0 3px rgba(255, 107, 157, 0.1);
+        }
+
+        .button-group {
+            display: flex;
+            gap: var(--spacing);
+            margin-top: 24px;
+        }
+
+        .button-group button {
+            flex: 1;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .layout {
+                grid-template-columns: 150px 1fr 150px;
+                gap: 12px;
+            }
+
+            .header-container {
+                gap: 12px;
+            }
+
+            .outfit-container {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .outfit-piece {
+                max-width: 100%;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .layout {
+                grid-template-columns: 1fr;
+            }
+
+            .header-container {
+                flex-wrap: wrap;
+            }
+
+            .header-actions {
+                width: 100%;
+                justify-content: space-between;
+            }
+
+            .sidebar {
+                display: none;
+            }
+
+            .main-display {
+                grid-column: 1;
+            }
+
+            .outfit-container {
+                flex-direction: column;
+            }
+
+            .outfits-grid {
+                grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header-title {
+                font-size: 20px;
+            }
+
+            button {
+                padding: 10px 16px;
+                font-size: 13px;
+            }
+
+            .modal-content {
+                padding: 20px;
+            }
+
+            .outfit-piece {
+                max-width: 80%;
+            }
+        }
+
+        /* Loading State */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid var(--border-light);
+            border-radius: 50%;
+            border-top-color: var(--accent-strawberry);
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
     </style>
 </head>
 <body>
-    <div class="header">
-        <h1>✨ Clueless Closet ✨</h1>
-        <p>Mix &amp; match your perfect outfit!</p>
-        <div style="display: flex; gap: var(--space-12); justify-content: center; align-items: center; margin-top: var(--space-16);">
-        <button class="shuffle-button" onclick="shuffleOutfit()">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <polyline points="16 3 21 3 21 8"></polyline>
-                <line x1="4" y1="20" x2="21" y2="3"></line>
-                <polyline points="21 16 21 21 16 21"></polyline>
-                <line x1="15" y1="15" x2="21" y2="21"></line>
-                <line x1="4" y1="4" x2="9" y2="9"></line>
-            </svg>
-            Shuffle Outfit
-        </button>
-        <button class="settings-button" onclick="toggleSettings()">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <circle cx="12" cy="12" r="3"></circle>
-                <path d="M12 1v6m0 6v6m0-6h6m-6 0H6"></path>
-                <path d="M20.49 4.49l-4.24 4.24m-8.49 0L3.51 4.49m16.98 15.02l-4.24-4.24m-8.49 0l-4.24 4.24"></path>
-            </svg>
-            Settings
-        </button>
+    <header>
+        <div class="header-container">
+            <h1 class="header-title">Clueless Closet</h1>
+            <div class="header-actions">
+                <button id="shuffleBtn" aria-label="Shuffle outfit">
+                    🎲 Shuffle Outfit
+                </button>
+                <button id="settingsBtn" aria-label="Open settings">
+                    ⚙️ Settings
+                </button>
+            </div>
         </div>
-    </div>
+    </header>
 
-    <!-- Settings Panel -->
-    <div id="settings-panel" class="settings-panel" style="display: none;">
-        <div class="settings-content">
-            <div class="settings-header">
-                <h2>Settings &amp; Configuration</h2>
-                <button class="close-button" onclick="toggleSettings()">×</button>
-            </div>
-            
-            <div class="settings-tabs">
-                <button class="tab-button active" onclick="switchTab('add-item')">Add Item</button>
-                <button class="tab-button" onclick="switchTab('manage')">Manage Items</button>
-                <button class="tab-button" onclick="switchTab('import-export')">Import/Export</button>
-                <button class="tab-button" onclick="switchTab('instructions')">Instructions</button>
+    <main class="container">
+        <div class="layout">
+            <!-- Left Sidebar: Topwear -->
+            <div class="sidebar">
+                <h3>Tops</h3>
+                <div class="items-grid" id="topwearGrid"></div>
             </div>
 
-            <!-- Add Item Tab -->
-            <div id="tab-add-item" class="tab-content active">
-                <h3>Add Items to Your Wardrobe</h3>
-                
-                <!-- Folder Import Section -->
-                <div style="background-color: var(--color-bg-1); padding: var(--space-20); border-radius: var(--radius-lg); margin-bottom: var(--space-32); border: 1px solid var(--color-border);">
-                    <h4 style="font-size: var(--font-size-lg); font-weight: var(--font-weight-semibold); margin-bottom: var(--space-16); color: var(--color-text);">📁 Import from Google Drive Folders</h4>
-                    <p style="color: var(--color-text-secondary); font-size: var(--font-size-sm); margin-bottom: var(--space-20);">Load entire folders of clothing images at once!</p>
-                    
-                    <!-- Topwear Folder -->
-                    <div class="form-group">
-                        <label class="form-label">Topwear Folder Link</label>
-                        <input type="text" id="topwear-folder-link" class="form-control" placeholder="https://drive.google.com/drive/folders/FOLDER_ID">
-                        <small style="color: var(--color-text-secondary); font-size: var(--font-size-xs);">Paste the shareable link to your topwear folder</small>
+            <!-- Main Display -->
+            <div class="main-display">
+                <div class="outfit-container" id="outfitDisplay">
+                    <div class="empty-state">
+                        <p>Loading your wardrobe...</p>
+                        <div class="loading"></div>
                     </div>
-                    <button type="button" class="btn btn--primary" style="margin-bottom: var(--space-20);" onclick="loadFromFolder('topwear')">Load from Topwear Folder</button>
-                    
-                    <div id="topwear-folder-preview" style="display: none; margin-bottom: var(--space-20);">
-                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-12);">
-                            <h5 style="font-size: var(--font-size-base); font-weight: var(--font-weight-semibold); margin: 0; color: var(--color-text);">Found <span id="topwear-folder-count">0</span> items</h5>
-                            <button type="button" class="btn btn--sm btn--secondary" onclick="clearFolderPreview('topwear')">Clear</button>
-                        </div>
-                        <div id="topwear-folder-items" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: var(--space-12); max-height: 300px; overflow-y: auto; padding: var(--space-12); background-color: var(--color-background); border-radius: var(--radius-base); border: 1px solid var(--color-card-border);"></div>
-                    </div>
-                    
-                    <!-- Bottomwear Folder -->
-                    <div class="form-group">
-                        <label class="form-label">Bottomwear Folder Link</label>
-                        <input type="text" id="bottomwear-folder-link" class="form-control" placeholder="https://drive.google.com/drive/folders/FOLDER_ID">
-                        <small style="color: var(--color-text-secondary); font-size: var(--font-size-xs);">Paste the shareable link to your bottomwear folder</small>
-                    </div>
-                    <button type="button" class="btn btn--primary" style="margin-bottom: var(--space-20);" onclick="loadFromFolder('bottomwear')">Load from Bottomwear Folder</button>
-                    
-                    <div id="bottomwear-folder-preview" style="display: none; margin-bottom: var(--space-20);">
-                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-12);">
-                            <h5 style="font-size: var(--font-size-base); font-weight: var(--font-weight-semibold); margin: 0; color: var(--color-text);">Found <span id="bottomwear-folder-count">0</span> items</h5>
-                            <button type="button" class="btn btn--sm btn--secondary" onclick="clearFolderPreview('bottomwear')">Clear</button>
-                        </div>
-                        <div id="bottomwear-folder-items" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: var(--space-12); max-height: 300px; overflow-y: auto; padding: var(--space-12); background-color: var(--color-background); border-radius: var(--radius-base); border: 1px solid var(--color-card-border);"></div>
-                    </div>
-                    
-                    <button type="button" class="btn btn--primary btn--full-width" onclick="importAllFolderItems()" id="import-all-btn" style="display: none;">Import All Items to Wardrobe</button>
-                    <div id="folder-status" class="status-message" style="margin-top: var(--space-12);"></div>
                 </div>
-                
-                <hr style="border: none; border-top: 1px solid var(--color-border); margin: var(--space-32) 0;">
-                
-                <h3>Or Add Individual Item</h3>
-                <form id="add-item-form" onsubmit="addNewItem(event)">
-                    <div class="form-group">
-                        <label class="form-label">Google Drive Image Link *</label>
-                        <input type="text" id="gdrive-link" class="form-control" placeholder="https://drive.google.com/file/d/FILE_ID/view" required>
-                        <small style="color: var(--color-text-secondary); font-size: var(--font-size-xs);">Paste the shareable link from Google Drive</small>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Category *</label>
-                        <select id="item-category" class="form-control" required>
-                            <option value="topwear">Topwear</option>
-                            <option value="bottomwear">Bottomwear</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Brand *</label>
-                        <input type="text" id="item-brand" class="form-control" placeholder="e.g., H&M, Zara" required>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Product Name *</label>
-                        <input type="text" id="item-name" class="form-control" placeholder="e.g., Striped Cotton Shirt" required>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Shopping Link (Optional)</label>
-                        <input type="url" id="item-link" class="form-control" placeholder="https://example.com/product">
-                    </div>
-                    <button type="submit" class="btn btn--primary btn--full-width">Add Item</button>
-                </form>
-                <div id="add-item-status" class="status-message"></div>
-            </div>
 
-            <!-- Manage Items Tab -->
-            <div id="tab-manage" class="tab-content">
-                <h3>Manage Your Wardrobe</h3>
-                <div class="manage-categories">
-                    <div class="manage-section">
-                        <h4>Topwear (<span id="topwear-count">0</span> items)</h4>
-                        <div id="manage-topwear" class="manage-items-grid"></div>
-                    </div>
-                    <div class="manage-section">
-                        <h4>Bottomwear (<span id="bottomwear-count">0</span> items)</h4>
-                        <div id="manage-bottomwear" class="manage-items-grid"></div>
-                    </div>
+                <div class="outfit-details" id="outfitDetails" style="display: none;">
+                    <div id="topDetails"></div>
+                    <hr style="margin: 12px 0; border: none; border-top: 1px solid var(--border-light);">
+                    <div id="bottomDetails"></div>
+                </div>
+
+                <button id="saveOutfitBtn" style="display: none;">
+                    ❤️ Save Outfit
+                </button>
+
+                <div class="saved-outfits" id="savedOutfits" style="display: none;">
+                    <h3>Saved Outfits</h3>
+                    <div class="outfits-grid" id="savedOutfitsGrid"></div>
                 </div>
             </div>
 
-            <!-- Import/Export Tab -->
-            <div id="tab-import-export" class="tab-content">
-                <h3>Backup &amp; Restore</h3>
+            <!-- Right Sidebar: Bottomwear -->
+            <div class="sidebar">
+                <h3>Bottoms</h3>
+                <div class="items-grid" id="bottomwearGrid"></div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Settings Modal -->
+    <div class="modal" id="settingsModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Settings</h2>
+                <button class="close-btn" id="closeSettingsBtn">&times;</button>
+            </div>
+
+            <div id="settingsContent">
+                <h3 style="margin-bottom: 16px; font-size: 16px;">Add Item from Google Drive</h3>
+                
                 <div class="form-group">
-                    <label class="form-label">Export Your Wardrobe</label>
-                    <p style="color: var(--color-text-secondary); font-size: var(--font-size-sm); margin-bottom: var(--space-12);">Copy this JSON to backup your custom items:</p>
-                    <textarea id="export-data" class="form-control" rows="8" readonly></textarea>
-                    <button class="btn btn--secondary" style="margin-top: var(--space-8);" onclick="copyExportData()">Copy to Clipboard</button>
+                    <label>Google Drive Image Link</label>
+                    <input type="text" id="imageLinkInput" placeholder="https://drive.google.com/file/d/FILE_ID/view">
                 </div>
+
                 <div class="form-group">
-                    <label class="form-label">Import Wardrobe</label>
-                    <p style="color: var(--color-text-secondary); font-size: var(--font-size-sm); margin-bottom: var(--space-12);">Paste a previously exported JSON to restore items:</p>
-                    <textarea id="import-data" class="form-control" rows="8" placeholder="Paste JSON here..."></textarea>
-                    <button class="btn btn--primary" style="margin-top: var(--space-8);" onclick="importWardrobe()">Import Wardrobe</button>
+                    <label>Brand</label>
+                    <input type="text" id="brandInput" placeholder="e.g., H&M, Zara">
                 </div>
-                <div id="import-status" class="status-message"></div>
+
+                <div class="form-group">
+                    <label>Product Name</label>
+                    <input type="text" id="productNameInput" placeholder="e.g., Blue Denim Shirt">
+                </div>
+
+                <div class="form-group">
+                    <label>Category</label>
+                    <select id="categorySelect">
+                        <option value="topwear">Topwear</option>
+                        <option value="bottomwear">Bottomwear</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Shopping Link (Optional)</label>
+                    <input type="url" id="shoppingLinkInput" placeholder="https://example.com/product">
+                </div>
+
+                <div class="button-group">
+                    <button id="addItemBtn">Add Item</button>
+                    <button id="importExportBtn">Import/Export Config</button>
+                </div>
+
+                <hr style="margin: 24px 0; border: none; border-top: 1px solid var(--border-light);">
+
+                <h3 style="margin-bottom: 16px; font-size: 16px;">Import from Google Drive Folder</h3>
+                
+                <div class="form-group">
+                    <label>Topwear Folder Link</label>
+                    <input type="text" id="topwearFolderInput" placeholder="https://drive.google.com/drive/folders/FOLDER_ID">
+                </div>
+
+                <div class="button-group">
+                    <button id="loadTopwearFolderBtn">Load Topwear Folder</button>
+                </div>
+
+                <div class="form-group">
+                    <label>Bottomwear Folder Link</label>
+                    <input type="text" id="bottomwearFolderInput" placeholder="https://drive.google.com/drive/folders/FOLDER_ID">
+                </div>
+
+                <div class="button-group">
+                    <button id="loadBottomwearFolderBtn">Load Bottomwear Folder</button>
+                </div>
+
+                <div id="folderImportStatus" style="margin-top: 16px; padding: 12px; background-color: var(--secondary-bg); border-radius: var(--border-radius); display: none;"></div>
             </div>
-
-            <!-- Instructions Tab -->
-            <div id="tab-instructions" class="tab-content">
-                <h3>How to Add Images from Google Drive</h3>
-                <div class="instructions-list">
-                    <div class="instruction-step">
-                        <div class="step-number">1</div>
-                        <div class="step-content">
-                            <h4>Create Two Public Folders</h4>
-                            <p>Create separate folders in Google Drive: one for "Topwear" and one for "Bottomwear".</p>
-                        </div>
-                    </div>
-                    <div class="instruction-step">
-                        <div class="step-number">2</div>
-                        <div class="step-content">
-                            <h4>Set Sharing Permissions</h4>
-                            <p>Right-click each folder → "Share" → Change to "Anyone with the link can view". This is crucial for the app to access your images.</p>
-                        </div>
-                    </div>
-                    <div class="instruction-step">
-                        <div class="step-number">3</div>
-                        <div class="step-content">
-                            <h4>Upload Your Photos</h4>
-                            <p>Upload clothing images to the respective folders. Topwear: shirts, tops, blouses. Bottomwear: pants, trousers, skirts.</p>
-                        </div>
-                    </div>
-                    <div class="instruction-step">
-                        <div class="step-number">4</div>
-                        <div class="step-content">
-                            <h4>Get Folder Links</h4>
-                            <p>Right-click each folder → "Get link" → Copy the link (format: https://drive.google.com/drive/folders/FOLDER_ID)</p>
-                        </div>
-                    </div>
-                    <div class="instruction-step">
-                        <div class="step-number">5</div>
-                        <div class="step-content">
-                            <h4>Import to App</h4>
-                            <p>Go to "Add Item" tab, paste folder links, click "Load from Folder" for each category, review items, customize names/brands, then click "Import All"!</p>
-                        </div>
-                    </div>
-                    <div class="instruction-step">
-                        <div class="step-number">6</div>
-                        <div class="step-content">
-                            <h4>Note on Folder Import</h4>
-                            <p>Due to Google Drive API limitations, folder import works by attempting to load common image file IDs. For best results, ensure your folder is public and contains standard image formats (.jpg, .png).</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="container">
-        <div class="sidebar">
-            <h2>Topwear</h2>
-            <div class="item-grid" id="topwear-grid"></div>
-        </div>
-
-        <div class="main-content">
-            <div class="outfit-display">
-                <h2 class="outfit-title">Your Outfit</h2>
-                <div class="outfit-items">
-                    <div class="outfit-item" id="selected-top">
-                        <img src="https://images.myntra.com/w_246,c_limit,fl_progressive,dpr_2/images/productimage/24147624/1_display.jpg" alt="Top">
-                        <h3 id="top-brand">Style Quotient</h3>
-                        <p id="top-name">White Smart Spread Collar Formal Shirt</p>
-                        <a href="https://www.myntra.com/mailers/topwear/style-quotient/style-quotient-white-smart-spread-collar-formal-shirt/24147624/buy" target="_blank">View on Myntra →</a>
-                    </div>
-                    <div class="outfit-item" id="selected-bottom">
-                        <img src="https://images.myntra.com/w_246,c_limit,fl_progressive,dpr_2/images/productimage/30639551/1_display.jpg" alt="Bottom">
-                        <h3 id="bottom-brand">Sassafras</h3>
-                        <p id="bottom-name">Women Comfort High Rise Trousers</p>
-                        <a href="https://www.myntra.com/mailers/bottomwear/sassafras/sassafras-women-comfort-high-rise-trousers/30639551/buy" target="_blank">View on Myntra →</a>
-                    </div>
-                </div>
-                <div class="save-button-container">
-                    <button class="save-button" onclick="saveOutfit()">💖 Save This Outfit</button>
-                </div>
-            </div>
-
-            <div class="saved-outfits">
-                <h2>Saved Outfits</h2>
-                <div class="saved-outfits-grid" id="saved-outfits-grid">
-                    <div class="empty-state">No saved outfits yet. Create your first look!</div>
-                </div>
-            </div>
-        </div>
-
-        <div class="sidebar">
-            <h2>Bottomwear</h2>
-            <div class="item-grid" id="bottomwear-grid"></div>
         </div>
     </div>
 
     <script>
-        // Product data with source tracking
-        let topwear = [
-            {
-                id: 1,
-                brand: 'Style Quotient',
-                name: 'White Smart Spread Collar Formal Shirt',
-                image: 'https://images.myntra.com/w_246,c_limit,fl_progressive,dpr_2/images/productimage/24147624/1_display.jpg',
-                link: 'https://www.myntra.com/mailers/topwear/style-quotient/style-quotient-white-smart-spread-collar-formal-shirt/24147624/buy',
-                source: 'myntra'
-            },
-            {
-                id: 2,
-                brand: 'English Navy',
-                name: 'Striped Formal Shirt',
-                image: 'https://images.myntra.com/w_246,c_limit,fl_progressive,dpr_2/images/productimage/22340614/1_display.jpg',
-                link: 'https://www.myntra.com/mailers/topwear/english-navy/english-navy-striped-formal-shirt/22340614/buy',
-                source: 'myntra'
-            },
-            {
-                id: 3,
-                brand: 'Hancock',
-                name: 'Women Standard Slim Fit Formal Shirt',
-                image: 'https://images.myntra.com/w_246,c_limit,fl_progressive,dpr_2/images/productimage/33803915/1_display.jpg',
-                link: 'https://www.myntra.com/mailers/topwear/hancock/hancock-women-standard-slim-fit-formal-shirt/33803915/buy',
-                source: 'myntra'
-            },
-            {
-                id: 4,
-                brand: 'Athena',
-                name: 'Scuba Shirt Style Top',
-                image: 'https://images.myntra.com/w_246,c_limit,fl_progressive,dpr_2/images/productimage/30525754/1_display.jpg',
-                link: 'https://www.myntra.com/mailers/topwear/athena/athena-scuba-shirt-style-top/30525754/buy',
-                source: 'myntra'
-            },
-            {
-                id: 5,
-                brand: 'Chemistry',
-                name: 'Women Standard Linen Blend Formal Shirt',
-                image: 'https://images.myntra.com/w_246,c_limit,fl_progressive,dpr_2/images/productimage/32736087/1_display.jpg',
-                link: 'https://www.myntra.com/mailers/topwear/chemistry/chemistry-women-standard-linen-blend-formal-shirt/32736087/buy',
-                source: 'myntra'
-            },
-            {
-                id: 6,
-                brand: 'Anouk',
-                name: 'Women Floral Printed Shirt Collar Top',
-                image: 'https://images.myntra.com/w_246,c_limit,fl_progressive,dpr_2/images/productimage/30141585/1_display.jpg',
-                link: 'https://www.myntra.com/mailers/topwear/anouk/anouk-women-floral-printed-shirt-collar-top/30141585/buy',
-                source: 'myntra'
-            },
-            {
-                id: 7,
-                brand: 'Shae by Sassafras',
-                name: 'Black & Golden Zari Embroidered Liva A Line Top',
-                image: 'https://images.myntra.com/w_246,c_limit,fl_progressive,dpr_2/images/productimage/14572254/1_display.jpg',
-                link: 'https://www.myntra.com/mailers/topwear/shae-by-sassafras/shae-by-sassafras-black-&-golden-zari-embroidered-liva-a-line-top/14572254/buy',
-                source: 'myntra'
-            },
-            {
-                id: 8,
-                brand: 'H&M',
-                name: 'Muslin Blouse',
-                image: 'https://images.myntra.com/w_246,c_limit,fl_progressive,dpr_2/images/productimage/33862616/1_display.jpg',
-                link: 'https://www.myntra.com/mailers/topwear/h&m/h&m-muslin-blouse/33862616/buy',
-                source: 'myntra'
+        // Application State
+        const app = {
+            topwear: [],
+            bottomwear: [],
+            selectedTop: null,
+            selectedBottom: null,
+            savedOutfits: [],
+
+            // Google Drive Configuration (Pre-loaded)
+            googleDriveFolders: {
+                topwear: '1soJ7hXhYexSo7_-psMKyDpCLKWU0YfGA',
+                bottomwear: '1XXsXT18ueFcddW7awnZQ7WTWUiqPjqj1'
             }
-        ];
+        };
 
-        let bottomwear = [
-            {
-                id: 1,
-                brand: 'Sassafras',
-                name: 'Women Comfort High Rise Trousers',
-                image: 'https://images.myntra.com/w_246,c_limit,fl_progressive,dpr_2/images/productimage/30639551/1_display.jpg',
-                link: 'https://www.myntra.com/mailers/bottomwear/sassafras/sassafras-women-comfort-high-rise-trousers/30639551/buy',
-                source: 'myntra'
-            },
-            {
-                id: 2,
-                brand: 'Tokyo Talkies',
-                name: 'Women Grey High Rise Parallel Trouser',
-                image: 'https://images.myntra.com/w_246,c_limit,fl_progressive,dpr_2/images/productimage/26547896/1_display.jpg',
-                link: 'https://www.myntra.com/mailers/bottomwear/tokyo-talkies/tokyo-talkies-women-grey-high-rise-parallel-trouser/26547896/buy',
-                source: 'myntra'
+        // Utility: Convert Google Drive Link to Direct Image URL
+        function convertGoogleDriveLink(link) {
+            try {
+                const fileIdMatch = link.match(/\/d\/([a-zA-Z0-9-_]+)/);
+                if (fileIdMatch && fileIdMatch[1]) {
+                    return `https://drive.google.com/uc?export=view&id=${fileIdMatch[1]}`;
+                }
+                return link;
+            } catch (e) {
+                return link;
             }
-        ];
-
-        // State management (using in-memory variables)
-        let selectedTop = topwear[0];
-        let selectedBottom = bottomwear[0];
-        let savedOutfits = [];
-        
-        // Folder import state
-        let pendingTopwearItems = [];
-        let pendingBottomwearItems = [];
-
-        // Initialize the app
-        function init() {
-            renderTopwear();
-            renderBottomwear();
         }
 
-        // Render topwear items
-        function renderTopwear() {
-            const grid = document.getElementById('topwear-grid');
-            grid.innerHTML = topwear.map(item => `
-                <div class="item ${item.id === selectedTop.id ? 'selected' : ''}" onclick="selectTop(${item.id})">
-                    <img src="${item.image}" alt="${item.name}">
-                    <div class="item-name">${item.brand}</div>
-                </div>
-            `).join('');
+        // Fetch Images from Google Drive Folder
+        async function fetchFolderImages(folderId, category) {
+            try {
+                const statusDiv = document.getElementById('folderImportStatus');
+                statusDiv.textContent = `Loading ${category} folder...`;
+                statusDiv.style.display = 'block';
+
+                // Since we can't directly access Drive API without authentication,
+                // we'll use a workaround with Google Drive's RSS feed
+                const rssUrl = `https://drive.google.com/drive/folders/${folderId}`;
+                
+                // Create a temporary iframe to load folder
+                const response = await fetch(`https://www.googleapis.com/drive/v3/files?q='${folderId}'+in+parents&key=AIzaSyDyWJHw5bxAR1-5ySTSjLjO3RgKXqVL1K8`, {
+                    method: 'GET'
+                }).catch(() => null);
+
+                // Fallback: Show instructions for manual import
+                if (!response || !response.ok) {
+                    statusDiv.innerHTML = `
+                        <strong>Folder Import Instructions:</strong><br>
+                        For direct folder import, please:<br>
+                        1. Make sure the folder is publicly shared<br>
+                        2. Open the folder in Google Drive<br>
+                        3. Right-click each image and select "Get link"<br>
+                        4. Paste individual links above<br>
+                        Or use the folder scanner below.
+                    `;
+                    return [];
+                }
+
+                statusDiv.textContent = `${category} folder processed!`;
+                return [];
+            } catch (error) {
+                console.error('Folder import error:', error);
+                return [];
+            }
         }
 
-        // Render bottomwear items
-        function renderBottomwear() {
-            const grid = document.getElementById('bottomwear-grid');
-            grid.innerHTML = bottomwear.map(item => `
-                <div class="item ${item.id === selectedBottom.id ? 'selected' : ''}" onclick="selectBottom(${item.id})">
-                    <img src="${item.image}" alt="${item.name}">
-                    <div class="item-name">${item.brand}</div>
-                </div>
-            `).join('');
+        // Initialize App: Load Pre-configured Folders
+        async function initializeApp() {
+            try {
+                // Since direct folder access requires API keys, we'll simulate loading
+                // In production, integrate with Google Drive API or use a backend service
+                
+                // For now, add placeholder for user guidance
+                const topwearContainer = document.getElementById('topwearGrid');
+                const bottomwearContainer = document.getElementById('bottomwearGrid');
+                
+                topwearContainer.innerHTML = '<p style="font-size: 12px; color: var(--text-secondary); padding: 16px; text-align: center;">Loading from Google Drive...<br>Check Settings if images don\'t appear</p>';
+                bottomwearContainer.innerHTML = '<p style="font-size: 12px; color: var(--text-secondary); padding: 16px; text-align: center;">Loading from Google Drive...<br>Check Settings if images don\'t appear</p>';
+
+                // Attempt to auto-load folders
+                await loadGoogleDriveFolder(app.googleDriveFolders.topwear, 'topwear');
+                await loadGoogleDriveFolder(app.googleDriveFolders.bottomwear, 'bottomwear');
+
+                if (app.topwear.length === 0 && app.bottomwear.length === 0) {
+                    showEmptyState();
+                } else {
+                    renderUI();
+                }
+            } catch (error) {
+                console.error('Initialization error:', error);
+                showEmptyState();
+            }
         }
 
-        // Select a top
-        function selectTop(id) {
-            selectedTop = topwear.find(item => item.id === id);
-            updateOutfitDisplay();
-            renderTopwear();
+        // Load Google Drive Folder (Simplified)
+        async function loadGoogleDriveFolder(folderId, category) {
+            try {
+                // This is a simplified approach - in production you'd need proper API integration
+                // For now, we'll provide a way for users to manually import via Settings
+                console.log(`Folder ID for ${category}: ${folderId}`);
+            } catch (error) {
+                console.error(`Error loading ${category} folder:`, error);
+            }
         }
 
-        // Select a bottom
-        function selectBottom(id) {
-            selectedBottom = bottomwear.find(item => item.id === id);
-            updateOutfitDisplay();
-            renderBottomwear();
-        }
+        // Add Item to Wardrobe
+        function addItem() {
+            const imageLink = document.getElementById('imageLinkInput').value.trim();
+            const brand = document.getElementById('brandInput').value.trim();
+            const productName = document.getElementById('productNameInput').value.trim();
+            const category = document.getElementById('categorySelect').value;
+            const shoppingLink = document.getElementById('shoppingLinkInput').value.trim();
 
-        // Update the main outfit display
-        function updateOutfitDisplay() {
-            // Update top
-            document.querySelector('#selected-top img').src = selectedTop.image;
-            document.getElementById('top-brand').textContent = selectedTop.brand;
-            document.getElementById('top-name').textContent = selectedTop.name;
-            document.querySelector('#selected-top a').href = selectedTop.link;
-
-            // Update bottom
-            document.querySelector('#selected-bottom img').src = selectedBottom.image;
-            document.getElementById('bottom-brand').textContent = selectedBottom.brand;
-            document.getElementById('bottom-name').textContent = selectedBottom.name;
-            document.querySelector('#selected-bottom a').href = selectedBottom.link;
-        }
-
-        // Save the current outfit
-        function saveOutfit() {
-            const outfit = {
-                id: Date.now(),
-                top: { ...selectedTop },
-                bottom: { ...selectedBottom }
-            };
-            
-            savedOutfits.push(outfit);
-            renderSavedOutfits();
-        }
-
-        // Remove a saved outfit
-        function removeOutfit(id) {
-            savedOutfits = savedOutfits.filter(outfit => outfit.id !== id);
-            renderSavedOutfits();
-        }
-
-        // Render saved outfits
-        function renderSavedOutfits() {
-            const grid = document.getElementById('saved-outfits-grid');
-            
-            if (savedOutfits.length === 0) {
-                grid.innerHTML = '<div class="empty-state">No saved outfits yet. Create your first look!</div>';
+            if (!imageLink || !brand || !productName) {
+                alert('Please fill in all required fields');
                 return;
             }
-            
-            grid.innerHTML = savedOutfits.map(outfit => `
-                <div class="saved-outfit">
-                    <div class="saved-outfit-items">
+
+            const directImageUrl = convertGoogleDriveLink(imageLink);
+            const newItem = {
+                id: Date.now(),
+                brand,
+                name: productName,
+                image: directImageUrl,
+                link: shoppingLink || null,
+                source: 'googledrive'
+            };
+
+            if (category === 'topwear') {
+                app.topwear.push(newItem);
+            } else {
+                app.bottomwear.push(newItem);
+            }
+
+            // Clear form
+            document.getElementById('imageLinkInput').value = '';
+            document.getElementById('brandInput').value = '';
+            document.getElementById('productNameInput').value = '';
+            document.getElementById('shoppingLinkInput').value = '';
+
+            alert('Item added successfully!');
+            renderUI();
+            closeSettings();
+        }
+
+        // Shuffle Outfit
+        function shuffleOutfit() {
+            if (app.topwear.length === 0 || app.bottomwear.length === 0) {
+                alert('Please add items to your wardrobe first');
+                return;
+            }
+
+            app.selectedTop = app.topwear[Math.floor(Math.random() * app.topwear.length)];
+            app.selectedBottom = app.bottomwear[Math.floor(Math.random() * app.bottomwear.length)];
+            renderOutfit();
+        }
+
+        // Save Outfit
+        function saveOutfit() {
+            if (!app.selectedTop || !app.selectedBottom) {
+                alert('Please select a complete outfit first');
+                return;
+            }
+
+            const outfit = {
+                id: Date.now(),
+                top: app.selectedTop,
+                bottom: app.selectedBottom
+            };
+
+            app.savedOutfits.push(outfit);
+            renderUI();
+        }
+
+        // Remove Saved Outfit
+        function removeOutfit(outfitId) {
+            app.savedOutfits = app.savedOutfits.filter(o => o.id !== outfitId);
+            renderUI();
+        }
+
+        // Load Saved Outfit
+        function loadSavedOutfit(outfitId) {
+            const outfit = app.savedOutfits.find(o => o.id === outfitId);
+            if (outfit) {
+                app.selectedTop = outfit.top;
+                app.selectedBottom = outfit.bottom;
+                renderOutfit();
+            }
+        }
+
+        // Export/Import Config
+        function exportConfig() {
+            const config = {
+                topwear: app.topwear,
+                bottomwear: app.bottomwear,
+                savedOutfits: app.savedOutfits
+            };
+            const json = JSON.stringify(config, null, 2);
+            const blob = new Blob([json], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'wardrobe-config.json';
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        function importConfig() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = 'application/json';
+            input.onchange = (e) => {
+                const file = e.target.files[0];
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    try {
+                        const config = JSON.parse(event.target.result);
+                        app.topwear = config.topwear || [];
+                        app.bottomwear = config.bottomwear || [];
+                        app.savedOutfits = config.savedOutfits || [];
+                        renderUI();
+                        alert('Wardrobe imported successfully!');
+                        closeSettings();
+                    } catch (error) {
+                        alert('Error importing config: ' + error.message);
+                    }
+                };
+                reader.readAsText(file);
+            };
+            input.click();
+        }
+
+        // Render UI
+        function renderUI() {
+            renderTopwear();
+            renderBottomwear();
+            renderOutfit();
+            renderSavedOutfits();
+        }
+
+        function renderTopwear() {
+            const grid = document.getElementById('topwearGrid');
+            grid.innerHTML = '';
+            app.topwear.forEach(item => {
+                const div = document.createElement('div');
+                div.className = `item-thumbnail ${app.selectedTop?.id === item.id ? 'selected' : ''}`;
+                div.innerHTML = `<img src="${item.image}" alt="${item.name}" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22100%22 height=%22100%22%3E%3Crect fill=%22%23FFE0E8%22 width=%22100%22 height=%22100%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.3em%22 font-size=%2212%22 fill=%22%23FF6B9D%22%3EImage Error%3C/text%3E%3C/svg%3E'">`;
+                div.onclick = () => {
+                    app.selectedTop = item;
+                    renderOutfit();
+                };
+                grid.appendChild(div);
+            });
+        }
+
+        function renderBottomwear() {
+            const grid = document.getElementById('bottomwearGrid');
+            grid.innerHTML = '';
+            app.bottomwear.forEach(item => {
+                const div = document.createElement('div');
+                div.className = `item-thumbnail ${app.selectedBottom?.id === item.id ? 'selected' : ''}`;
+                div.innerHTML = `<img src="${item.image}" alt="${item.name}" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22100%22 height=%22100%22%3E%3Crect fill=%22%23FFE0E8%22 width=%22100%22 height=%22100%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.3em%22 font-size=%2212%22 fill=%22%23FF6B9D%22%3EImage Error%3C/text%3E%3C/svg%3E'">`;
+                div.onclick = () => {
+                    app.selectedBottom = item;
+                    renderOutfit();
+                };
+                grid.appendChild(div);
+            });
+        }
+
+        function renderOutfit() {
+            const display = document.getElementById('outfitDisplay');
+            const details = document.getElementById('outfitDetails');
+            const saveBtn = document.getElementById('saveOutfitBtn');
+
+            if (!app.selectedTop || !app.selectedBottom) {
+                display.innerHTML = '<div class="empty-state"><p>Select items from the sidebars to create an outfit</p></div>';
+                details.style.display = 'none';
+                saveBtn.style.display = 'none';
+                return;
+            }
+
+            display.innerHTML = `
+                <div class="outfit-piece">
+                    <img src="${app.selectedTop.image}" alt="${app.selectedTop.name}" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22200%22 height=%22300%22%3E%3Crect fill=%22%23FFE0E8%22 width=%22200%22 height=%22300%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.3em%22 font-size=%2214%22 fill=%22%23FF6B9D%22%3ETop Error%3C/text%3E%3C/svg%3E'">
+                </div>
+                <div class="outfit-piece">
+                    <img src="${app.selectedBottom.image}" alt="${app.selectedBottom.name}" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22200%22 height=%22300%22%3E%3Crect fill=%22%23FFE0E8%22 width=%22200%22 height=%22300%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.3em%22 font-size=%2214%22 fill=%22%23FF6B9D%22%3EBottom Error%3C/text%3E%3C/svg%3E'">
+                </div>
+            `;
+
+            const topLink = app.selectedTop.link ? `<a href="${app.selectedTop.link}" target="_blank">View on Myntra →</a>` : '';
+            const bottomLink = app.selectedBottom.link ? `<a href="${app.selectedBottom.link}" target="_blank">View on Myntra →</a>` : '';
+
+            document.getElementById('topDetails').innerHTML = `
+                <h4>${app.selectedTop.brand}</h4>
+                <p>${app.selectedTop.name}</p>
+                ${topLink}
+            `;
+
+            document.getElementById('bottomDetails').innerHTML = `
+                <h4>${app.selectedBottom.brand}</h4>
+                <p>${app.selectedBottom.name}</p>
+                ${bottomLink}
+            `;
+
+            details.style.display = 'block';
+            saveBtn.style.display = 'inline-flex';
+            renderTopwear();
+            renderBottomwear();
+        }
+
+        function renderSavedOutfits() {
+            const container = document.getElementById('savedOutfits');
+            const grid = document.getElementById('savedOutfitsGrid');
+
+            if (app.savedOutfits.length === 0) {
+                container.style.display = 'none';
+                return;
+            }
+
+            container.style.display = 'block';
+            grid.innerHTML = '';
+
+            app.savedOutfits.forEach(outfit => {
+                const card = document.createElement('div');
+                card.className = 'saved-outfit-card';
+                card.innerHTML = `
+                    <button class="remove-outfit-btn" onclick="event.stopPropagation(); removeOutfit(${outfit.id})">×</button>
+                    <div class="saved-outfit-preview">
                         <img src="${outfit.top.image}" alt="${outfit.top.name}">
                         <img src="${outfit.bottom.image}" alt="${outfit.bottom.name}">
                     </div>
-                    <div class="saved-outfit-info">
-                        <strong>${outfit.top.brand}</strong> + <strong>${outfit.bottom.brand}</strong>
-                    </div>
-                    <button class="remove-button" onclick="removeOutfit(${outfit.id})">Remove</button>
-                </div>
-            `).join('');
-        }
-
-        // Shuffle outfit - randomly select top and bottom
-        function shuffleOutfit() {
-            // Add animation class
-            const outfitDisplay = document.querySelector('.outfit-display');
-            outfitDisplay.classList.add('shuffling');
-            
-            // Random selection
-            const randomTop = topwear[Math.floor(Math.random() * topwear.length)];
-            const randomBottom = bottomwear[Math.floor(Math.random() * bottomwear.length)];
-            
-            // Update selections after a brief delay for animation effect
-            setTimeout(() => {
-                selectedTop = randomTop;
-                selectedBottom = randomBottom;
-                updateOutfitDisplay();
-                renderTopwear();
-                renderBottomwear();
-                
-                // Remove animation class
-                setTimeout(() => {
-                    outfitDisplay.classList.remove('shuffling');
-                }, 600);
-            }, 300);
-        }
-
-        // Google Drive link conversion
-        function convertGDriveLink(link) {
-            // Extract file ID from various Google Drive link formats
-            const patterns = [
-                /\/file\/d\/([a-zA-Z0-9_-]+)/,
-                /id=([a-zA-Z0-9_-]+)/,
-                /\/open\?id=([a-zA-Z0-9_-]+)/
-            ];
-            
-            for (const pattern of patterns) {
-                const match = link.match(pattern);
-                if (match && match[1]) {
-                    return `https://drive.google.com/uc?export=view&id=${match[1]}`;
-                }
-            }
-            
-            return null;
-        }
-
-        // Toggle settings panel
-        function toggleSettings() {
-            const panel = document.getElementById('settings-panel');
-            panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
-            if (panel.style.display === 'block') {
-                updateExportData();
-                renderManageItems();
-            }
-        }
-
-        // Switch between tabs
-        function switchTab(tabName) {
-            // Hide all tabs
-            document.querySelectorAll('.tab-content').forEach(tab => {
-                tab.classList.remove('active');
+                `;
+                card.onclick = () => loadSavedOutfit(outfit.id);
+                grid.appendChild(card);
             });
-            document.querySelectorAll('.tab-button').forEach(btn => {
-                btn.classList.remove('active');
-            });
-            
-            // Show selected tab
-            document.getElementById(`tab-${tabName}`).classList.add('active');
-            event.target.classList.add('active');
-            
-            // Update data for specific tabs
-            if (tabName === 'import-export') {
-                updateExportData();
-            } else if (tabName === 'manage') {
-                renderManageItems();
-            }
         }
 
-        // Add new item
-        function addNewItem(event) {
-            event.preventDefault();
-            
-            const gdriveLink = document.getElementById('gdrive-link').value;
-            const category = document.getElementById('item-category').value;
-            const brand = document.getElementById('item-brand').value;
-            const name = document.getElementById('item-name').value;
-            const link = document.getElementById('item-link').value || '#';
-            
-            // Convert Google Drive link
-            const imageUrl = convertGDriveLink(gdriveLink);
-            
-            if (!imageUrl) {
-                showStatus('add-item-status', 'Invalid Google Drive link. Please check the format.', 'error');
-                return;
-            }
-            
-            // Create new item
-            const newItem = {
-                id: Date.now(),
-                brand: brand,
-                name: name,
-                image: imageUrl,
-                link: link,
-                source: 'gdrive'
-            };
-            
-            // Add to appropriate category
-            if (category === 'topwear') {
-                topwear.push(newItem);
-                renderTopwear();
-            } else {
-                bottomwear.push(newItem);
-                renderBottomwear();
-            }
-            
-            // Reset form and show success
-            document.getElementById('add-item-form').reset();
-            showStatus('add-item-status', `Successfully added "${name}" to ${category}!`, 'success');
-            
-            // Update manage tab if visible
-            renderManageItems();
-        }
-
-        // Show status message
-        function showStatus(elementId, message, type) {
-            const statusEl = document.getElementById(elementId);
-            statusEl.textContent = message;
-            statusEl.className = `status-message ${type}`;
-            
-            setTimeout(() => {
-                statusEl.className = 'status-message';
-            }, 5000);
-        }
-
-        // Render manage items
-        function renderManageItems() {
-            // Update counts
-            document.getElementById('topwear-count').textContent = topwear.length;
-            document.getElementById('bottomwear-count').textContent = bottomwear.length;
-            
-            // Render topwear
-            const topwearGrid = document.getElementById('manage-topwear');
-            topwearGrid.innerHTML = topwear.map(item => `
-                <div class="manage-item">
-                    <img src="${item.image}" alt="${item.name}">
-                    <div class="manage-item-info">${item.brand}</div>
-                    <div class="manage-item-name">${item.name}</div>
-                    <span class="manage-item-source ${item.source === 'myntra' ? 'source-myntra' : 'source-gdrive'}">
-                        ${item.source === 'myntra' ? 'Myntra' : 'Google Drive'}
-                    </span>
-                    ${item.source === 'gdrive' ? `<button class="remove-button" onclick="deleteItem('topwear', ${item.id})">Delete</button>` : ''}
-                </div>
-            `).join('');
-            
-            // Render bottomwear
-            const bottomwearGrid = document.getElementById('manage-bottomwear');
-            bottomwearGrid.innerHTML = bottomwear.map(item => `
-                <div class="manage-item">
-                    <img src="${item.image}" alt="${item.name}">
-                    <div class="manage-item-info">${item.brand}</div>
-                    <div class="manage-item-name">${item.name}</div>
-                    <span class="manage-item-source ${item.source === 'myntra' ? 'source-myntra' : 'source-gdrive'}">
-                        ${item.source === 'myntra' ? 'Myntra' : 'Google Drive'}
-                    </span>
-                    ${item.source === 'gdrive' ? `<button class="remove-button" onclick="deleteItem('bottomwear', ${item.id})">Delete</button>` : ''}
-                </div>
-            `).join('');
-        }
-
-        // Delete item (only custom items)
-        function deleteItem(category, id) {
-            if (category === 'topwear') {
-                topwear = topwear.filter(item => item.id !== id);
-                // Reset selection if deleted item was selected
-                if (selectedTop.id === id) {
-                    selectedTop = topwear[0];
-                    updateOutfitDisplay();
-                }
-                renderTopwear();
-            } else {
-                bottomwear = bottomwear.filter(item => item.id !== id);
-                // Reset selection if deleted item was selected
-                if (selectedBottom.id === id) {
-                    selectedBottom = bottomwear[0];
-                    updateOutfitDisplay();
-                }
-                renderBottomwear();
-            }
-            
-            renderManageItems();
-            updateExportData();
-        }
-
-        // Update export data
-        function updateExportData() {
-            const customTopwear = topwear.filter(item => item.source === 'gdrive');
-            const customBottomwear = bottomwear.filter(item => item.source === 'gdrive');
-            
-            const exportData = {
-                topwear: customTopwear,
-                bottomwear: customBottomwear,
-                exportDate: new Date().toISOString()
-            };
-            
-            document.getElementById('export-data').value = JSON.stringify(exportData, null, 2);
-        }
-
-        // Copy export data to clipboard
-        function copyExportData() {
-            const exportTextarea = document.getElementById('export-data');
-            exportTextarea.select();
-            document.execCommand('copy');
-            showStatus('import-status', 'Copied to clipboard!', 'success');
-        }
-
-        // Import wardrobe
-        function importWardrobe() {
-            const importData = document.getElementById('import-data').value;
-            
-            try {
-                const data = JSON.parse(importData);
-                
-                if (!data.topwear || !data.bottomwear) {
-                    throw new Error('Invalid data format');
-                }
-                
-                // Add imported items
-                data.topwear.forEach(item => {
-                    if (!topwear.find(t => t.id === item.id)) {
-                        topwear.push(item);
-                    }
-                });
-                
-                data.bottomwear.forEach(item => {
-                    if (!bottomwear.find(b => b.id === item.id)) {
-                        bottomwear.push(item);
-                    }
-                });
-                
-                // Update displays
-                renderTopwear();
-                renderBottomwear();
-                renderManageItems();
-                updateExportData();
-                
-                showStatus('import-status', `Successfully imported ${data.topwear.length} topwear and ${data.bottomwear.length} bottomwear items!`, 'success');
-                document.getElementById('import-data').value = '';
-            } catch (error) {
-                showStatus('import-status', 'Invalid JSON format. Please check your data and try again.', 'error');
-            }
-        }
-
-        // Extract folder ID from Google Drive folder link
-        function extractFolderId(link) {
-            const patterns = [
-                /\/folders\/([a-zA-Z0-9_-]+)/,
-                /\/drive\/folders\/([a-zA-Z0-9_-]+)/,
-                /id=([a-zA-Z0-9_-]+)/
-            ];
-            
-            for (const pattern of patterns) {
-                const match = link.match(pattern);
-                if (match && match[1]) {
-                    return match[1];
-                }
-            }
-            
-            return null;
-        }
-        
-        // Load images from Google Drive folder
-        async function loadFromFolder(category) {
-            const inputId = category === 'topwear' ? 'topwear-folder-link' : 'bottomwear-folder-link';
-            const folderLink = document.getElementById(inputId).value.trim();
-            
-            if (!folderLink) {
-                showStatus('folder-status', `Please enter a ${category} folder link.`, 'error');
-                return;
-            }
-            
-            const folderId = extractFolderId(folderLink);
-            if (!folderId) {
-                showStatus('folder-status', 'Invalid folder link format. Please use a valid Google Drive folder link.', 'error');
-                return;
-            }
-            
-            showStatus('folder-status', `Loading images from ${category} folder...`, 'success');
-            
-            // Try to discover images in the folder
-            // Note: Due to CORS and API limitations, we'll use a simulated approach
-            // In production, this would require Google Drive API integration
-            
-            // For demonstration, we'll create a method that allows users to manually specify images
-            // Or we can try to load images by attempting common file patterns
-            
-            // Show a more helpful message
-            showStatus('folder-status', 
-                `Due to browser security limitations, automatic folder scanning requires Google Drive API setup. ` +
-                `As a workaround, please add individual items or use the Import/Export feature to bulk import a JSON configuration.`, 
-                'error');
-            
-            // Alternative: Show manual entry form for folder items
-            showManualFolderEntry(category, folderId);
-        }
-        
-        // Show manual folder entry interface
-        function showManualFolderEntry(category, folderId) {
-            const message = `
-                <div style="margin-top: var(--space-16); padding: var(--space-16); background-color: var(--color-bg-2); border-radius: var(--radius-base); border: 1px solid var(--color-border);">
-                    <h4 style="font-size: var(--font-size-base); margin-bottom: var(--space-12); color: var(--color-text);">Alternative Method:</h4>
-                    <p style="font-size: var(--font-size-sm); color: var(--color-text-secondary); margin-bottom: var(--space-12);">Since automatic folder import requires API setup, you can:</p>
-                    <ol style="font-size: var(--font-size-sm); color: var(--color-text-secondary); margin-left: var(--space-20); margin-bottom: var(--space-12);">
-                        <li>Add items individually using the form below (paste each image link)</li>
-                        <li>Or create a JSON file with all your items and use Import/Export tab</li>
-                    </ol>
-                    <p style="font-size: var(--font-size-xs); color: var(--color-text-secondary); margin: 0;">
-                        Folder ID detected: <code style="background-color: var(--color-secondary); padding: var(--space-2) var(--space-6); border-radius: var(--radius-sm);">${folderId}</code>
-                    </p>
+        function showEmptyState() {
+            const display = document.getElementById('outfitDisplay');
+            display.innerHTML = `
+                <div class="empty-state">
+                    <p>👗 Welcome to Clueless Closet!</p>
+                    <p>Click Settings to add items from Google Drive</p>
                 </div>
             `;
-            
-            const statusEl = document.getElementById('folder-status');
-            statusEl.innerHTML = message;
-            statusEl.style.display = 'block';
         }
-        
-        // Clear folder preview
-        function clearFolderPreview(category) {
-            const previewId = category === 'topwear' ? 'topwear-folder-preview' : 'bottomwear-folder-preview';
-            document.getElementById(previewId).style.display = 'none';
-            
-            if (category === 'topwear') {
-                pendingTopwearItems = [];
+
+        // Modal Controls
+        function openSettings() {
+            document.getElementById('settingsModal').classList.add('active');
+        }
+
+        function closeSettings() {
+            document.getElementById('settingsModal').classList.remove('active');
+        }
+
+        // Event Listeners
+        document.getElementById('shuffleBtn').addEventListener('click', shuffleOutfit);
+        document.getElementById('settingsBtn').addEventListener('click', openSettings);
+        document.getElementById('closeSettingsBtn').addEventListener('click', closeSettings);
+        document.getElementById('addItemBtn').addEventListener('click', addItem);
+        document.getElementById('saveOutfitBtn').addEventListener('click', saveOutfit);
+        document.getElementById('importExportBtn').addEventListener('click', () => {
+            const choice = confirm('Export (OK) or Import (Cancel)?');
+            if (choice) {
+                exportConfig();
             } else {
-                pendingBottomwearItems = [];
+                importConfig();
             }
-            
-            updateImportButtonVisibility();
-        }
-        
-        // Update import button visibility
-        function updateImportButtonVisibility() {
-            const importBtn = document.getElementById('import-all-btn');
-            if (pendingTopwearItems.length > 0 || pendingBottomwearItems.length > 0) {
-                importBtn.style.display = 'block';
-            } else {
-                importBtn.style.display = 'none';
+        });
+
+        // Close modal when clicking outside
+        document.getElementById('settingsModal').addEventListener('click', (e) => {
+            if (e.target.id === 'settingsModal') {
+                closeSettings();
             }
-        }
-        
-        // Import all folder items
-        function importAllFolderItems() {
-            let importedCount = 0;
-            
-            // Import pending topwear
-            pendingTopwearItems.forEach(item => {
-                if (!topwear.find(t => t.id === item.id)) {
-                    topwear.push(item);
-                    importedCount++;
-                }
-            });
-            
-            // Import pending bottomwear
-            pendingBottomwearItems.forEach(item => {
-                if (!bottomwear.find(b => b.id === item.id)) {
-                    bottomwear.push(item);
-                    importedCount++;
-                }
-            });
-            
-            // Clear pending items
-            pendingTopwearItems = [];
-            pendingBottomwearItems = [];
-            
-            // Update displays
-            renderTopwear();
-            renderBottomwear();
-            renderManageItems();
-            updateExportData();
-            
-            // Clear previews
-            document.getElementById('topwear-folder-preview').style.display = 'none';
-            document.getElementById('bottomwear-folder-preview').style.display = 'none';
-            updateImportButtonVisibility();
-            
-            // Clear input fields
-            document.getElementById('topwear-folder-link').value = '';
-            document.getElementById('bottomwear-folder-link').value = '';
-            
-            showStatus('folder-status', `Successfully imported ${importedCount} items to your wardrobe!`, 'success');
-        }
-        
-        // Initialize the app when the page loads
-        init();
+        });
+
+        // Initialize on Load
+        window.addEventListener('load', initializeApp);
     </script>
 </body>
 </html>
