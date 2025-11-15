@@ -1,0 +1,387 @@
+// Create error placeholder element
+function createErrorPlaceholder() {
+    const div = document.createElement('div');
+    div.className = 'error-placeholder';
+    div.innerHTML = '<div class="error-icon">⚠️</div><div>Unable to load image</div>';
+    return div;
+}
+
+// Application State
+const app = {
+    topwear: [],
+    bottomwear: [],
+    selectedTop: null,
+    selectedBottom: null,
+    savedOutfits: []
+};
+
+// Utility: Convert Google Drive Link to Direct Image URL
+function convertGoogleDriveLink(link) {
+    try {
+        const fileIdMatch = link.match(/\/d\/([a-zA-Z0-9-_]+)/);
+        if (fileIdMatch && fileIdMatch[1]) {
+            return `https://drive.google.com/uc?export=view&id=${fileIdMatch[1]}`;
+        }
+        return link;
+    } catch (e) {
+        return link;
+    }
+}
+
+// Show Notification
+function showNotification(message, type = 'info') {
+    const notification = document.createElement('div');
+    const bgColor = type === 'success' ? '#E8F5E9' : type === 'error' ? '#FFEBEE' : '#F5F5F5';
+    const textColor = type === 'success' ? '#2E7D32' : type === 'error' ? '#C62828' : '#666';
+    const borderColor = type === 'success' ? '#4CAF50' : type === 'error' ? '#F44336' : '#999';
+    
+    notification.style.cssText = `
+        position: fixed;
+        top: 80px;
+        right: 20px;
+        padding: 12px 20px;
+        border-radius: 6px;
+        background-color: ${bgColor};
+        color: ${textColor};
+        border-left: 4px solid ${borderColor};
+        font-size: 14px;
+        font-weight: 500;
+        z-index: 2000;
+        animation: slideIn 0.3s ease;
+    `;
+    notification.textContent = message;
+    document.body.appendChild(notification);
+
+    setTimeout(() => {
+        notification.style.animation = 'slideOut 0.3s ease';
+        setTimeout(() => notification.remove(), 300);
+    }, 3000);
+}
+
+// Add Item to Wardrobe
+function addItem() {
+    const imageLink = document.getElementById('imageLinkInput').value.trim();
+    const brand = document.getElementById('brandInput').value.trim();
+    const productName = document.getElementById('productNameInput').value.trim();
+    const category = document.getElementById('categorySelect').value;
+    const shoppingLink = document.getElementById('shoppingLinkInput').value.trim();
+
+    if (!imageLink || !brand || !productName) {
+        showNotification('Please fill in all required fields', 'error');
+        return;
+    }
+
+    const directImageUrl = convertGoogleDriveLink(imageLink);
+    const newItem = {
+        id: Date.now(),
+        brand,
+        name: productName,
+        image: directImageUrl,
+        link: shoppingLink || null,
+        source: 'googledrive'
+    };
+
+    if (category === 'topwear') {
+        app.topwear.push(newItem);
+    } else {
+        app.bottomwear.push(newItem);
+    }
+
+    // Clear form
+    document.getElementById('imageLinkInput').value = '';
+    document.getElementById('brandInput').value = '';
+    document.getElementById('productNameInput').value = '';
+    document.getElementById('shoppingLinkInput').value = '';
+
+    showNotification('✓ Item added successfully!', 'success');
+    renderUI();
+}
+
+// Shuffle Outfit
+function shuffleOutfit() {
+    if (app.topwear.length === 0 || app.bottomwear.length === 0) {
+        showNotification('Please add at least one top and one bottom first', 'error');
+        return;
+    }
+
+    app.selectedTop = app.topwear[Math.floor(Math.random() * app.topwear.length)];
+    app.selectedBottom = app.bottomwear[Math.floor(Math.random() * app.bottomwear.length)];
+    renderOutfit();
+}
+
+// Save Outfit
+function saveOutfit() {
+    if (!app.selectedTop || !app.selectedBottom) {
+        showNotification('Please select a complete outfit first', 'error');
+        return;
+    }
+
+    const outfit = {
+        id: Date.now(),
+        top: app.selectedTop,
+        bottom: app.selectedBottom
+    };
+
+    app.savedOutfits.push(outfit);
+    showNotification('❤️ Outfit saved!', 'success');
+    renderUI();
+}
+
+// Remove Saved Outfit
+function removeOutfit(outfitId) {
+    app.savedOutfits = app.savedOutfits.filter(o => o.id !== outfitId);
+    renderUI();
+}
+
+// Load Saved Outfit
+function loadSavedOutfit(outfitId) {
+    const outfit = app.savedOutfits.find(o => o.id === outfitId);
+    if (outfit) {
+        app.selectedTop = outfit.top;
+        app.selectedBottom = outfit.bottom;
+        renderOutfit();
+    }
+}
+
+// Export Config
+function exportConfig() {
+    const config = {
+        topwear: app.topwear,
+        bottomwear: app.bottomwear,
+        savedOutfits: app.savedOutfits,
+        exportDate: new Date().toISOString()
+    };
+    const json = JSON.stringify(config, null, 2);
+    const blob = new Blob([json], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `wardrobe-${Date.now()}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+    showNotification('✓ Wardrobe exported!', 'success');
+}
+
+// Import Config
+function importConfig() {
+    const input = document.getElementById('fileInput');
+    input.onchange = (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+        
+        const reader = new FileReader();
+        reader.onload = (event) => {
+            try {
+                const config = JSON.parse(event.target.result);
+                app.topwear = config.topwear || [];
+                app.bottomwear = config.bottomwear || [];
+                app.savedOutfits = config.savedOutfits || [];
+                renderUI();
+                showNotification('✓ Wardrobe imported successfully!', 'success');
+                closeSettings();
+            } catch (error) {
+                showNotification('✗ Error importing config', 'error');
+            }
+        };
+        reader.readAsText(file);
+    };
+    input.click();
+}
+
+// Escape HTML
+function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+}
+
+// Create Image Element with Error Handler
+function createImageElement(src, alt) {
+    const img = document.createElement('img');
+    img.src = src;
+    img.alt = alt;
+    img.loading = 'lazy';
+    img.addEventListener('error', function() {
+        if (this.parentNode) {
+            this.parentNode.replaceChild(createErrorPlaceholder(), this);
+        }
+    });
+    return img;
+}
+
+// Render UI
+function renderUI() {
+    renderTopwear();
+    renderBottomwear();
+    renderOutfit();
+    renderSavedOutfits();
+}
+
+function renderTopwear() {
+    const grid = document.getElementById('topwearGrid');
+    grid.innerHTML = '';
+    
+    if (app.topwear.length === 0) {
+        grid.innerHTML = '<p style="font-size: 12px; color: var(--text-secondary); text-align: center; padding: 16px;">Add items in Settings</p>';
+        return;
+    }
+    
+    app.topwear.forEach((item, index) => {
+        const div = document.createElement('div');
+        div.className = `item-thumbnail ${app.selectedTop?.id === item.id ? 'selected' : ''}`;
+        div.appendChild(createImageElement(item.image, item.name));
+        div.onclick = () => {
+            app.selectedTop = item;
+            renderOutfit();
+        };
+        div.style.animationDelay = `${index * 50}ms`;
+        grid.appendChild(div);
+    });
+}
+
+function renderBottomwear() {
+    const grid = document.getElementById('bottomwearGrid');
+    grid.innerHTML = '';
+    
+    if (app.bottomwear.length === 0) {
+        grid.innerHTML = '<p style="font-size: 12px; color: var(--text-secondary); text-align: center; padding: 16px;">Add items in Settings</p>';
+        return;
+    }
+    
+    app.bottomwear.forEach((item, index) => {
+        const div = document.createElement('div');
+        div.className = `item-thumbnail ${app.selectedBottom?.id === item.id ? 'selected' : ''}`;
+        div.appendChild(createImageElement(item.image, item.name));
+        div.onclick = () => {
+            app.selectedBottom = item;
+            renderOutfit();
+        };
+        div.style.animationDelay = `${index * 50}ms`;
+        grid.appendChild(div);
+    });
+}
+
+function renderOutfit() {
+    const display = document.getElementById('outfitDisplay');
+    const details = document.getElementById('outfitDetails');
+    const saveBtn = document.getElementById('saveOutfitBtn');
+
+    if (!app.selectedTop || !app.selectedBottom) {
+        display.innerHTML = '<div class="empty-state"><p>👗</p><p>Select items from the sidebars to create an outfit</p></div>';
+        details.style.display = 'none';
+        saveBtn.style.display = 'none';
+        return;
+    }
+
+    display.innerHTML = '';
+    
+    const topPiece = document.createElement('div');
+    topPiece.className = 'outfit-piece';
+    topPiece.appendChild(createImageElement(app.selectedTop.image, app.selectedTop.name));
+    
+    const bottomPiece = document.createElement('div');
+    bottomPiece.className = 'outfit-piece';
+    bottomPiece.appendChild(createImageElement(app.selectedBottom.image, app.selectedBottom.name));
+    
+    display.appendChild(topPiece);
+    display.appendChild(bottomPiece);
+
+    const topLink = app.selectedTop.link ? `<a href="${escapeHtml(app.selectedTop.link)}" target="_blank" rel="noopener">View on Myntra →</a>` : '';
+    const bottomLink = app.selectedBottom.link ? `<a href="${escapeHtml(app.selectedBottom.link)}" target="_blank" rel="noopener">View on Myntra →</a>` : '';
+
+    document.getElementById('topDetails').innerHTML = `
+        <h4>${escapeHtml(app.selectedTop.brand)}</h4>
+        <p>${escapeHtml(app.selectedTop.name)}</p>
+        ${topLink}
+    `;
+
+    document.getElementById('bottomDetails').innerHTML = `
+        <h4>${escapeHtml(app.selectedBottom.brand)}</h4>
+        <p>${escapeHtml(app.selectedBottom.name)}</p>
+        ${bottomLink}
+    `;
+
+    details.style.display = 'block';
+    saveBtn.style.display = 'inline-flex';
+    renderTopwear();
+    renderBottomwear();
+}
+
+function renderSavedOutfits() {
+    const container = document.getElementById('savedOutfits');
+    const grid = document.getElementById('savedOutfitsGrid');
+
+    if (app.savedOutfits.length === 0) {
+        container.style.display = 'none';
+        return;
+    }
+
+    container.style.display = 'block';
+    grid.innerHTML = '';
+
+    app.savedOutfits.forEach((outfit, index) => {
+        const card = document.createElement('div');
+        card.className = 'saved-outfit-card';
+        
+        const preview = document.createElement('div');
+        preview.className = 'saved-outfit-preview';
+        
+        const topImg = createImageElement(outfit.top.image, outfit.top.name);
+        const bottomImg = createImageElement(outfit.bottom.image, outfit.bottom.name);
+        
+        preview.appendChild(topImg);
+        preview.appendChild(bottomImg);
+        
+        const removeBtn = document.createElement('button');
+        removeBtn.className = 'remove-outfit-btn';
+        removeBtn.textContent = '×';
+        removeBtn.onclick = (e) => {
+            e.stopPropagation();
+            removeOutfit(outfit.id);
+        };
+        
+        card.appendChild(removeBtn);
+        card.appendChild(preview);
+        card.onclick = () => loadSavedOutfit(outfit.id);
+        card.style.animationDelay = `${index * 50}ms`;
+        grid.appendChild(card);
+    });
+}
+
+// Modal Controls
+function openSettings() {
+    document.getElementById('settingsModal').classList.add('active');
+}
+
+function closeSettings() {
+    document.getElementById('settingsModal').classList.remove('active');
+}
+
+// Event Listeners
+document.getElementById('shuffleBtn').addEventListener('click', shuffleOutfit);
+document.getElementById('settingsBtn').addEventListener('click', openSettings);
+document.getElementById('closeSettingsBtn').addEventListener('click', closeSettings);
+document.getElementById('addItemBtn').addEventListener('click', addItem);
+document.getElementById('saveOutfitBtn').addEventListener('click', saveOutfit);
+document.getElementById('exportBtn').addEventListener('click', exportConfig);
+document.getElementById('importBtn').addEventListener('click', importConfig);
+
+// Keyboard shortcuts
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeSettings();
+    if (e.key === ' ' && e.target === document.body) {
+        e.preventDefault();
+        shuffleOutfit();
+    }
+});
+
+document.getElementById('settingsModal').addEventListener('click', (e) => {
+    if (e.target.id === 'settingsModal') {
+        closeSettings();
+    }
+});
+
+// Initialize
+window.addEventListener('load', () => {
+    renderUI();
+});
