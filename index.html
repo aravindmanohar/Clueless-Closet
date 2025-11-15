@@ -28,11 +28,17 @@
             --transition: all 200ms ease;
         }
 
+        html, body {
+            height: 100%;
+        }
+
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             background-color: var(--bg-white);
             color: var(--text-primary);
             line-height: 1.6;
+            display: flex;
+            flex-direction: column;
         }
 
         /* Header */
@@ -44,6 +50,7 @@
             position: sticky;
             top: 0;
             z-index: 100;
+            flex-shrink: 0;
         }
 
         .header-container {
@@ -57,9 +64,13 @@
 
         .header-title {
             font-size: 28px;
-            font-weight: 600;
+            font-weight: 700;
             color: var(--text-primary);
             letter-spacing: -0.5px;
+            background: linear-gradient(135deg, var(--accent-strawberry), var(--button-primary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
         .header-actions {
@@ -76,20 +87,41 @@
             padding: 12px 24px;
             border-radius: var(--border-radius);
             font-size: 14px;
-            font-weight: 500;
+            font-weight: 600;
             cursor: pointer;
             transition: var(--transition);
             min-height: 44px;
             display: inline-flex;
             align-items: center;
+            justify-content: center;
             gap: 8px;
             white-space: nowrap;
+            position: relative;
+            overflow: hidden;
+        }
+
+        button::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            transform: translate(-50%, -50%);
+            transition: width 600ms, height 600ms;
+        }
+
+        button:hover::before {
+            width: 300px;
+            height: 300px;
         }
 
         button:hover {
             background-color: var(--button-hover);
             box-shadow: 0 4px 12px var(--shadow);
-            transform: translateY(-1px);
+            transform: translateY(-2px);
         }
 
         button:active {
@@ -110,11 +142,18 @@
             opacity: 0.6;
         }
 
+        button span {
+            position: relative;
+            z-index: 1;
+        }
+
         /* Main Container */
         .container {
             max-width: 1400px;
             margin: 0 auto;
             padding: var(--spacing);
+            flex: 1;
+            width: 100%;
         }
 
         /* Layout */
@@ -122,28 +161,57 @@
             display: grid;
             grid-template-columns: 200px 1fr 200px;
             gap: var(--spacing);
-            min-height: calc(100vh - 100px);
+            height: 100%;
         }
 
         .sidebar {
-            background-color: var(--secondary-bg);
+            background: linear-gradient(180deg, var(--secondary-bg) 0%, #FFF8F5 100%);
             border-radius: var(--border-radius);
             padding: var(--spacing);
             overflow-y: auto;
+            border: 1px solid var(--border-light);
+            scroll-behavior: smooth;
+        }
+
+        .sidebar::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .sidebar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .sidebar::-webkit-scrollbar-thumb {
+            background: var(--button-primary);
+            border-radius: 3px;
+        }
+
+        .sidebar::-webkit-scrollbar-thumb:hover {
+            background: var(--button-hover);
         }
 
         .sidebar h3 {
-            font-size: 14px;
-            font-weight: 600;
+            font-size: 13px;
+            font-weight: 700;
             margin-bottom: 12px;
             color: var(--text-primary);
             text-transform: uppercase;
-            letter-spacing: 0.5px;
+            letter-spacing: 1px;
         }
 
         .items-grid {
             display: grid;
             gap: 12px;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
         }
 
         .item-thumbnail {
@@ -154,29 +222,90 @@
             cursor: pointer;
             transition: var(--transition);
             overflow: hidden;
-            background-color: var(--bg-white);
+            background: linear-gradient(135deg, var(--secondary-bg), #FFF8F5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            box-shadow: 0 2px 4px var(--shadow);
         }
 
         .item-thumbnail:hover {
             border-color: var(--accent-strawberry);
-            box-shadow: 0 4px 12px var(--shadow);
-            transform: scale(1.02);
+            box-shadow: 0 6px 16px var(--shadow);
+            transform: translateY(-4px);
         }
 
         .item-thumbnail img {
             width: 100%;
             height: 100%;
             object-fit: cover;
+            transition: var(--transition);
+        }
+
+        .item-thumbnail:hover img {
+            transform: scale(1.05);
         }
 
         .item-thumbnail.selected {
             border-color: var(--accent-strawberry);
-            box-shadow: 0 0 0 3px rgba(255, 107, 157, 0.2);
+            box-shadow: 0 0 0 3px rgba(255, 107, 157, 0.2), 0 4px 12px var(--shadow);
+            background: var(--secondary-bg);
+        }
+
+        .item-thumbnail.selected::after {
+            content: '✓';
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background-color: var(--accent-strawberry);
+            color: white;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 12px;
+            animation: popIn 0.3s ease;
+        }
+
+        @keyframes popIn {
+            0% {
+                transform: scale(0);
+            }
+            70% {
+                transform: scale(1.2);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        .error-placeholder {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #FFE0E8 0%, #FFFAF7 100%);
+            color: var(--accent-strawberry);
+            font-size: 11px;
+            text-align: center;
+            padding: 12px;
+            font-weight: 600;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .error-icon {
+            font-size: 18px;
         }
 
         /* Main Display */
         .main-display {
-            background-color: var(--secondary-bg);
+            background: linear-gradient(135deg, var(--secondary-bg) 0%, #FFF8F5 100%);
             border-radius: var(--border-radius);
             padding: var(--spacing);
             display: flex;
@@ -184,6 +313,8 @@
             justify-content: center;
             align-items: center;
             gap: var(--spacing);
+            border: 1px solid var(--border-light);
+            animation: fadeIn 0.4s ease;
         }
 
         .outfit-container {
@@ -192,6 +323,7 @@
             justify-content: center;
             align-items: flex-start;
             width: 100%;
+            flex-wrap: wrap;
         }
 
         .outfit-piece {
@@ -200,26 +332,62 @@
             aspect-ratio: 3/4;
             border-radius: var(--border-radius);
             overflow: hidden;
-            box-shadow: 0 4px 16px var(--shadow);
-            background-color: var(--bg-white);
+            box-shadow: 0 8px 24px var(--shadow);
+            background: linear-gradient(135deg, var(--secondary-bg), #FFF8F5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            animation: slideUp 0.4s ease;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .outfit-piece::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border: 2px solid transparent;
+            border-radius: var(--border-radius);
+            background: linear-gradient(135deg, rgba(255, 107, 157, 0.1), rgba(255, 179, 217, 0.1)) border-box;
+            pointer-events: none;
         }
 
         .outfit-piece img {
             width: 100%;
             height: 100%;
             object-fit: cover;
+            transition: var(--transition);
+        }
+
+        .outfit-piece:hover img {
+            transform: scale(1.02);
         }
 
         .outfit-details {
             width: 100%;
             text-align: center;
+            animation: fadeIn 0.3s ease;
         }
 
         .outfit-details h4 {
             font-size: 16px;
-            font-weight: 600;
+            font-weight: 700;
             margin-bottom: 4px;
             color: var(--text-primary);
+            background: linear-gradient(135deg, var(--accent-strawberry), var(--button-primary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
         .outfit-details p {
@@ -231,12 +399,28 @@
         .outfit-details a {
             color: var(--accent-strawberry);
             text-decoration: none;
-            font-weight: 500;
+            font-weight: 600;
             font-size: 12px;
+            transition: var(--transition);
+            position: relative;
         }
 
-        .outfit-details a:hover {
-            text-decoration: underline;
+        .outfit-details a::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background-color: var(--accent-strawberry);
+            transform: scaleX(0);
+            transform-origin: right;
+            transition: transform 0.3s ease;
+        }
+
+        .outfit-details a:hover::after {
+            transform: scaleX(1);
+            transform-origin: left;
         }
 
         /* Empty State */
@@ -244,6 +428,7 @@
             text-align: center;
             padding: 40px var(--spacing);
             color: var(--text-secondary);
+            animation: fadeIn 0.3s ease;
         }
 
         .empty-state p {
@@ -251,16 +436,22 @@
             margin-bottom: 12px;
         }
 
+        .empty-state p:first-child {
+            font-size: 32px;
+            margin-bottom: 8px;
+        }
+
         /* Saved Outfits */
         .saved-outfits {
             margin-top: var(--spacing);
             padding-top: var(--spacing);
-            border-top: 1px solid var(--border-light);
+            border-top: 2px solid var(--border-light);
+            animation: fadeIn 0.4s ease;
         }
 
         .saved-outfits h3 {
             font-size: 16px;
-            font-weight: 600;
+            font-weight: 700;
             margin-bottom: 12px;
             color: var(--text-primary);
         }
@@ -280,11 +471,13 @@
             cursor: pointer;
             transition: var(--transition);
             position: relative;
+            box-shadow: 0 2px 8px var(--shadow);
         }
 
         .saved-outfit-card:hover {
             border-color: var(--accent-strawberry);
-            box-shadow: 0 4px 12px var(--shadow);
+            box-shadow: 0 6px 16px var(--shadow);
+            transform: translateY(-4px);
         }
 
         .saved-outfit-preview {
@@ -301,26 +494,39 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
+            transition: var(--transition);
+        }
+
+        .saved-outfit-card:hover .saved-outfit-preview img {
+            transform: scale(1.05);
         }
 
         .remove-outfit-btn {
             position: absolute;
             top: 4px;
             right: 4px;
-            background-color: rgba(255, 107, 157, 0.8);
+            background-color: var(--accent-strawberry) !important;
             color: white;
-            border: none;
-            width: 24px;
-            height: 24px;
+            border: none !important;
+            width: 28px;
+            height: 28px;
             border-radius: 50%;
-            padding: 0;
-            font-size: 14px;
+            padding: 0 !important;
+            font-size: 16px;
+            font-weight: bold;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
             opacity: 0;
             transition: var(--transition);
+            box-shadow: 0 2px 8px rgba(255, 107, 157, 0.3);
+            min-height: auto !important;
+        }
+
+        .remove-outfit-btn:hover {
+            background-color: var(--button-hover) !important;
+            transform: scale(1.1) !important;
         }
 
         .saved-outfit-card:hover .remove-outfit-btn {
@@ -335,10 +541,12 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background-color: rgba(0, 0, 0, 0.3);
+            background-color: rgba(0, 0, 0, 0.4);
             z-index: 1000;
             align-items: center;
             justify-content: center;
+            backdrop-filter: blur(4px);
+            animation: fadeIn 0.2s ease;
         }
 
         .modal.active {
@@ -353,7 +561,21 @@
             width: 90%;
             max-height: 80vh;
             overflow-y: auto;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+            animation: slideUp 0.3s ease;
+        }
+
+        .modal-content::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .modal-content::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .modal-content::-webkit-scrollbar-thumb {
+            background: var(--button-primary);
+            border-radius: 4px;
         }
 
         .modal-header {
@@ -365,17 +587,27 @@
 
         .modal-header h2 {
             font-size: 24px;
-            font-weight: 600;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--accent-strawberry), var(--button-primary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
         .close-btn {
-            background: none;
-            border: none;
-            font-size: 24px;
+            background: none !important;
+            border: none !important;
+            font-size: 28px;
             color: var(--text-secondary);
             cursor: pointer;
-            padding: 0;
-            min-height: auto;
+            padding: 0 !important;
+            min-height: auto !important;
+            transition: var(--transition);
+        }
+
+        .close-btn:hover {
+            color: var(--accent-strawberry);
+            transform: rotate(90deg) !important;
         }
 
         .form-group {
@@ -385,9 +617,11 @@
         .form-group label {
             display: block;
             font-size: 13px;
-            font-weight: 600;
+            font-weight: 700;
             margin-bottom: 6px;
             color: var(--text-primary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         .form-group input,
@@ -395,11 +629,13 @@
         .form-group textarea {
             width: 100%;
             padding: 10px 12px;
-            border: 1px solid var(--border-light);
+            border: 2px solid var(--border-light);
             border-radius: var(--border-radius);
             font-size: 14px;
             font-family: inherit;
             transition: var(--transition);
+            background-color: var(--bg-white);
+            color: var(--text-primary);
         }
 
         .form-group input:focus,
@@ -407,7 +643,13 @@
         .form-group textarea:focus {
             outline: none;
             border-color: var(--accent-strawberry);
-            box-shadow: 0 0 0 3px rgba(255, 107, 157, 0.1);
+            box-shadow: 0 0 0 3px rgba(255, 107, 157, 0.15);
+            background-color: var(--secondary-bg);
+        }
+
+        .form-group input::placeholder,
+        .form-group select::placeholder {
+            color: var(--text-secondary);
         }
 
         .button-group {
@@ -423,61 +665,28 @@
         .section-divider {
             margin: 24px 0;
             border: none;
-            border-top: 1px solid var(--border-light);
+            border-top: 2px solid var(--border-light);
         }
 
         .info-box {
-            background-color: var(--secondary-bg);
-            border-left: 3px solid var(--button-primary);
+            background: linear-gradient(135deg, var(--secondary-bg) 0%, #FFF8F5 100%);
+            border-left: 4px solid var(--button-primary);
             padding: 12px;
             border-radius: 4px;
             font-size: 13px;
             margin: 12px 0;
             color: var(--text-secondary);
-        }
-
-        .status-message {
-            padding: 12px;
-            border-radius: var(--border-radius);
-            margin: 12px 0;
-            font-size: 13px;
-        }
-
-        .status-message.success {
-            background-color: #E8F5E9;
-            color: #2E7D32;
-            border-left: 3px solid #4CAF50;
-        }
-
-        .status-message.error {
-            background-color: #FFEBEE;
-            color: #C62828;
-            border-left: 3px solid #F44336;
-        }
-
-        .status-message.info {
-            background-color: var(--secondary-bg);
-            color: var(--text-secondary);
-            border-left: 3px solid var(--button-primary);
-        }
-
-        .image-input-wrapper {
-            position: relative;
+            line-height: 1.6;
         }
 
         .file-input {
             display: none;
         }
 
-        .file-input-btn {
-            display: inline-flex;
-            cursor: pointer;
-        }
-
         /* Responsive */
         @media (max-width: 1024px) {
             .layout {
-                grid-template-columns: 150px 1fr 150px;
+                grid-template-columns: 140px 1fr 140px;
                 gap: 12px;
             }
 
@@ -506,7 +715,8 @@
 
             .header-actions {
                 width: 100%;
-                justify-content: space-between;
+                justify-content: flex-start;
+                gap: 8px;
             }
 
             .sidebar {
@@ -524,16 +734,29 @@
             .outfits-grid {
                 grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
             }
-        }
 
-        @media (max-width: 480px) {
             .header-title {
-                font-size: 20px;
+                font-size: 22px;
             }
 
             button {
                 padding: 10px 16px;
-                font-size: 13px;
+                font-size: 12px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 8px;
+            }
+
+            .header-title {
+                font-size: 18px;
+            }
+
+            button {
+                padding: 8px 12px;
+                font-size: 11px;
             }
 
             .modal-content {
@@ -542,6 +765,18 @@
 
             .outfit-piece {
                 max-width: 80%;
+            }
+
+            .header-actions {
+                gap: 4px;
+            }
+
+            button span {
+                display: none;
+            }
+
+            button::before {
+                display: none;
             }
         }
 
@@ -557,7 +792,20 @@
         }
 
         @keyframes spin {
-            to { transform: rotate(360deg); }
+            to { 
+                transform: rotate(360deg); 
+            }
+        }
+
+        /* Smooth scroll */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Selection styling */
+        ::selection {
+            background-color: var(--button-primary);
+            color: var(--button-text);
         }
     </style>
 </head>
@@ -567,10 +815,10 @@
             <h1 class="header-title">Clueless Closet</h1>
             <div class="header-actions">
                 <button id="shuffleBtn" aria-label="Shuffle outfit">
-                    🎲 Shuffle Outfit
+                    <span>🎲 Shuffle</span>
                 </button>
                 <button id="settingsBtn" aria-label="Open settings">
-                    ⚙️ Settings
+                    <span>⚙️ Settings</span>
                 </button>
             </div>
         </div>
@@ -588,7 +836,8 @@
             <div class="main-display">
                 <div class="outfit-container" id="outfitDisplay">
                     <div class="empty-state">
-                        <p>👗 Welcome to Clueless Closet!</p>
+                        <p>👗</p>
+                        <p>Welcome to Clueless Closet!</p>
                         <p>Click Settings to add items</p>
                     </div>
                 </div>
@@ -600,7 +849,7 @@
                 </div>
 
                 <button id="saveOutfitBtn" style="display: none;">
-                    ❤️ Save Outfit
+                    <span>❤️ Save Outfit</span>
                 </button>
 
                 <div class="saved-outfits" id="savedOutfits" style="display: none;">
@@ -626,8 +875,7 @@
             </div>
 
             <div id="settingsContent">
-                <!-- Add Single Item -->
-                <h3 style="margin-bottom: 16px; font-size: 16px;">📸 Add Item</h3>
+                <h3 style="margin-bottom: 16px; font-size: 16px; font-weight: 700;">📸 Add Item</h3>
                 
                 <div class="form-group">
                     <label>Google Drive Image Link</label>
@@ -659,73 +907,45 @@
                 </div>
 
                 <div class="button-group">
-                    <button id="addItemBtn">✓ Add Item</button>
+                    <button id="addItemBtn"><span>✓ Add Item</span></button>
                 </div>
 
                 <hr class="section-divider">
 
-                <!-- Batch Upload from Google Drive Folder -->
-                <h3 style="margin-bottom: 16px; font-size: 16px;">📁 Batch Import from Google Drive</h3>
-                
-                <div class="info-box">
-                    <strong>How to set up:</strong><br>
-                    1. Create a Google Drive folder (or use existing)<br>
-                    2. Right-click folder → Share → "Anyone with link"<br>
-                    3. Paste folder link below and click import<br>
-                    4. Select images to add to your wardrobe
-                </div>
-
-                <div class="form-group">
-                    <label>Topwear Folder Link</label>
-                    <input type="text" id="topwearFolderInput" placeholder="https://drive.google.com/drive/folders/FOLDER_ID">
-                </div>
-
-                <div class="button-group">
-                    <button id="loadTopwearFolderBtn">📂 Scan Topwear Folder</button>
-                </div>
-
-                <div id="topwearFolderStatus"></div>
-
-                <div class="form-group">
-                    <label>Bottomwear Folder Link</label>
-                    <input type="text" id="bottomwearFolderInput" placeholder="https://drive.google.com/drive/folders/FOLDER_ID">
-                </div>
-
-                <div class="button-group">
-                    <button id="loadBottomwearFolderBtn">📂 Scan Bottomwear Folder</button>
-                </div>
-
-                <div id="bottomwearFolderStatus"></div>
-
-                <hr class="section-divider">
-
-                <!-- Export/Import Config -->
-                <h3 style="margin-bottom: 16px; font-size: 16px;">💾 Backup & Restore</h3>
+                <h3 style="margin-bottom: 16px; font-size: 16px; font-weight: 700;">💾 Backup & Restore</h3>
                 
                 <div class="button-group">
-                    <button id="exportBtn">↓ Export Wardrobe</button>
-                    <button id="importBtn">↑ Import Wardrobe</button>
+                    <button id="exportBtn"><span>↓ Export</span></button>
+                    <button id="importBtn"><span>↑ Import</span></button>
                 </div>
 
                 <input type="file" id="fileInput" class="file-input" accept="application/json">
             </div>
         </div>
-    </modal>
+    </div>
 
     <script>
+        // Create error placeholder element
+        function createErrorPlaceholder() {
+            const div = document.createElement('div');
+            div.className = 'error-placeholder';
+            div.innerHTML = '<div class="error-icon">⚠️</div><div>Unable to load image</div>';
+            return div;
+        }
+
         // Application State
         const app = {
             topwear: [],
             bottomwear: [],
             selectedTop: null,
             selectedBottom: null,
-            savedOutfits: []
+            savedOutfits: [],
+            isAnimating: false
         };
 
         // Utility: Convert Google Drive Link to Direct Image URL
         function convertGoogleDriveLink(link) {
             try {
-                // Handle full share link: https://drive.google.com/file/d/FILE_ID/view
                 const fileIdMatch = link.match(/\/d\/([a-zA-Z0-9-_]+)/);
                 if (fileIdMatch && fileIdMatch[1]) {
                     return `https://drive.google.com/uc?export=view&id=${fileIdMatch[1]}`;
@@ -733,53 +953,6 @@
                 return link;
             } catch (e) {
                 return link;
-            }
-        }
-
-        // Extract Folder ID
-        function extractFolderId(folderLink) {
-            try {
-                const match = folderLink.match(/\/folders\/([a-zA-Z0-9-_]+)/);
-                return match ? match[1] : null;
-            } catch (e) {
-                return null;
-            }
-        }
-
-        // Load Folder with Alternative Method
-        async function loadFolderImages(folderId, category) {
-            try {
-                const statusDiv = category === 'topwear' 
-                    ? document.getElementById('topwearFolderStatus')
-                    : document.getElementById('bottomwearFolderStatus');
-
-                statusDiv.innerHTML = '<div class="status-message info"><div class="loading"></div> Scanning folder...</div>';
-
-                // Method 1: Try using Google Drive's export CSV feature
-                const csvUrl = `https://drive.google.com/drive/folders/${folderId}?usp=sharing`;
-                
-                // Since direct API access is restricted, we'll show instructions
-                statusDiv.innerHTML = `
-                    <div class="status-message info">
-                        <strong>Alternative Import Method:</strong><br>
-                        <br>
-                        <strong>Option A - Recommended:</strong><br>
-                        1. Open this folder: <a href="${csvUrl}" target="_blank">https://drive.google.com/drive/folders/${folderId}</a><br>
-                        2. For each image, right-click → "Get link"<br>
-                        3. Paste link at top of settings<br>
-                        <br>
-                        <strong>Option B - Bulk Copy:</strong><br>
-                        Install this Chrome extension for bulk link generation:<br>
-                        <a href="https://chrome.google.com/webstore/search/google%20drive%20link%20generator" target="_blank">Google Drive Link Generator</a>
-                    </div>
-                `;
-
-            } catch (error) {
-                console.error('Folder load error:', error);
-                const statusDiv = category === 'topwear' 
-                    ? document.getElementById('topwearFolderStatus')
-                    : document.getElementById('bottomwearFolderStatus');
-                statusDiv.innerHTML = '<div class="status-message error">Error accessing folder. Make sure it\'s shared publicly.</div>';
             }
         }
 
@@ -792,7 +965,7 @@
             const shoppingLink = document.getElementById('shoppingLinkInput').value.trim();
 
             if (!imageLink || !brand || !productName) {
-                alert('Please fill in all required fields');
+                showNotification('Please fill in all required fields', 'error');
                 return;
             }
 
@@ -812,20 +985,45 @@
                 app.bottomwear.push(newItem);
             }
 
-            // Clear form
             document.getElementById('imageLinkInput').value = '';
             document.getElementById('brandInput').value = '';
             document.getElementById('productNameInput').value = '';
             document.getElementById('shoppingLinkInput').value = '';
 
-            alert('✓ Item added successfully!');
+            showNotification('✓ Item added successfully!', 'success');
             renderUI();
+        }
+
+        // Show Notification
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 80px;
+                right: 20px;
+                padding: 12px 20px;
+                border-radius: 6px;
+                background-color: ${type === 'success' ? '#E8F5E9' : type === 'error' ? '#FFEBEE' : '#F5F5F5'};
+                color: ${type === 'success' ? '#2E7D32' : type === 'error' ? '#C62828' : '#666'};
+                border-left: 4px solid ${type === 'success' ? '#4CAF50' : type === 'error' ? '#F44336' : '#999'};
+                font-size: 14px;
+                font-weight: 500;
+                z-index: 2000;
+                animation: slideIn 0.3s ease;
+            `;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+
+            setTimeout(() => {
+                notification.style.animation = 'slideOut 0.3s ease';
+                setTimeout(() => notification.remove(), 300);
+            }, 3000);
         }
 
         // Shuffle Outfit
         function shuffleOutfit() {
             if (app.topwear.length === 0 || app.bottomwear.length === 0) {
-                alert('Please add at least one top and one bottom first');
+                showNotification('Please add at least one top and one bottom first', 'error');
                 return;
             }
 
@@ -837,7 +1035,7 @@
         // Save Outfit
         function saveOutfit() {
             if (!app.selectedTop || !app.selectedBottom) {
-                alert('Please select a complete outfit first');
+                showNotification('Please select a complete outfit first', 'error');
                 return;
             }
 
@@ -848,6 +1046,7 @@
             };
 
             app.savedOutfits.push(outfit);
+            showNotification('❤️ Outfit saved!', 'success');
             renderUI();
         }
 
@@ -883,6 +1082,7 @@
             a.download = `wardrobe-${Date.now()}.json`;
             a.click();
             URL.revokeObjectURL(url);
+            showNotification('✓ Wardrobe exported!', 'success');
         }
 
         // Import Config
@@ -890,6 +1090,8 @@
             const input = document.getElementById('fileInput');
             input.onchange = (e) => {
                 const file = e.target.files[0];
+                if (!file) return;
+                
                 const reader = new FileReader();
                 reader.onload = (event) => {
                     try {
@@ -898,10 +1100,10 @@
                         app.bottomwear = config.bottomwear || [];
                         app.savedOutfits = config.savedOutfits || [];
                         renderUI();
-                        alert('✓ Wardrobe imported successfully!');
+                        showNotification('✓ Wardrobe imported successfully!', 'success');
                         closeSettings();
                     } catch (error) {
-                        alert('✗ Error importing config: ' + error.message);
+                        showNotification('✗ Error importing config', 'error');
                     }
                 };
                 reader.readAsText(file);
@@ -924,14 +1126,24 @@
                 grid.innerHTML = '<p style="font-size: 12px; color: var(--text-secondary); text-align: center; padding: 16px;">Add items in Settings</p>';
                 return;
             }
-            app.topwear.forEach(item => {
+            app.topwear.forEach((item, index) => {
                 const div = document.createElement('div');
                 div.className = `item-thumbnail ${app.selectedTop?.id === item.id ? 'selected' : ''}`;
-                div.innerHTML = `<img src="${item.image}" alt="${item.name}" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22200%22 height=%22300%22%3E%3Crect fill=%22%23FFE0E8%22 width=%22200%22 height=%22300%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.3em%22 font-size=%2212%22 fill=%22%23FF6B9D%22%3EImage Error%3C/text%3E%3C/svg%3E'">`;
+                const img = document.createElement('img');
+                img.src = item.image;
+                img.alt = item.name;
+                img.loading = 'lazy';
+                img.addEventListener('error', function() {
+                    if (this.parentNode) {
+                        this.parentNode.replaceChild(createErrorPlaceholder(), this);
+                    }
+                });
+                div.appendChild(img);
                 div.onclick = () => {
                     app.selectedTop = item;
                     renderOutfit();
                 };
+                div.style.animationDelay = `${index * 50}ms`;
                 grid.appendChild(div);
             });
         }
@@ -943,14 +1155,24 @@
                 grid.innerHTML = '<p style="font-size: 12px; color: var(--text-secondary); text-align: center; padding: 16px;">Add items in Settings</p>';
                 return;
             }
-            app.bottomwear.forEach(item => {
+            app.bottomwear.forEach((item, index) => {
                 const div = document.createElement('div');
                 div.className = `item-thumbnail ${app.selectedBottom?.id === item.id ? 'selected' : ''}`;
-                div.innerHTML = `<img src="${item.image}" alt="${item.name}" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22200%22 height=%22300%22%3E%3Crect fill=%22%23FFE0E8%22 width=%22200%22 height=%22300%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.3em%22 font-size=%2212%22 fill=%22%23FF6B9D%22%3EImage Error%3C/text%3E%3C/svg%3E'">`;
+                const img = document.createElement('img');
+                img.src = item.image;
+                img.alt = item.name;
+                img.loading = 'lazy';
+                img.addEventListener('error', function() {
+                    if (this.parentNode) {
+                        this.parentNode.replaceChild(createErrorPlaceholder(), this);
+                    }
+                });
+                div.appendChild(img);
                 div.onclick = () => {
                     app.selectedBottom = item;
                     renderOutfit();
                 };
+                div.style.animationDelay = `${index * 50}ms`;
                 grid.appendChild(div);
             });
         }
@@ -961,33 +1183,55 @@
             const saveBtn = document.getElementById('saveOutfitBtn');
 
             if (!app.selectedTop || !app.selectedBottom) {
-                display.innerHTML = '<div class="empty-state"><p>👗 Select items from the sidebars to create an outfit</p></div>';
+                display.innerHTML = '<div class="empty-state"><p>👗</p><p>Select items from the sidebars to create an outfit</p></div>';
                 details.style.display = 'none';
                 saveBtn.style.display = 'none';
                 return;
             }
 
-            display.innerHTML = `
-                <div class="outfit-piece">
-                    <img src="${app.selectedTop.image}" alt="${app.selectedTop.name}" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22200%22 height=%22300%22%3E%3Crect fill=%22%23FFE0E8%22 width=%22200%22 height=%22300%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.3em%22 font-size=%2214%22 fill=%22%23FF6B9D%22%3ETop Error%3C/text%3E%3C/svg%3E'">
-                </div>
-                <div class="outfit-piece">
-                    <img src="${app.selectedBottom.image}" alt="${app.selectedBottom.name}" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22200%22 height=%22300%22%3E%3Crect fill=%22%23FFE0E8%22 width=%22200%22 height=%22300%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.3em%22 font-size=%2214%22 fill=%22%23FF6B9D%22%3EBottom Error%3C/text%3E%3C/svg%3E'">
-                </div>
-            `;
+            display.innerHTML = '';
+            
+            // Top piece
+            const topPiece = document.createElement('div');
+            topPiece.className = 'outfit-piece';
+            const topImg = document.createElement('img');
+            topImg.src = app.selectedTop.image;
+            topImg.alt = app.selectedTop.name;
+            topImg.addEventListener('error', function() {
+                if (this.parentNode) {
+                    this.parentNode.replaceChild(createErrorPlaceholder(), this);
+                }
+            });
+            topPiece.appendChild(topImg);
+            
+            // Bottom piece
+            const bottomPiece = document.createElement('div');
+            bottomPiece.className = 'outfit-piece';
+            const bottomImg = document.createElement('img');
+            bottomImg.src = app.selectedBottom.image;
+            bottomImg.alt = app.selectedBottom.name;
+            bottomImg.addEventListener('error', function() {
+                if (this.parentNode) {
+                    this.parentNode.replaceChild(createErrorPlaceholder(), this);
+                }
+            });
+            bottomPiece.appendChild(bottomImg);
+            
+            display.appendChild(topPiece);
+            display.appendChild(bottomPiece);
 
-            const topLink = app.selectedTop.link ? `<a href="${app.selectedTop.link}" target="_blank">View on Myntra →</a>` : '';
-            const bottomLink = app.selectedBottom.link ? `<a href="${app.selectedBottom.link}" target="_blank">View on Myntra →</a>` : '';
+            const topLink = app.selectedTop.link ? `<a href="${app.selectedTop.link}" target="_blank" rel="noopener">View on Myntra →</a>` : '';
+            const bottomLink = app.selectedBottom.link ? `<a href="${app.selectedBottom.link}" target="_blank" rel="noopener">View on Myntra →</a>` : '';
 
             document.getElementById('topDetails').innerHTML = `
-                <h4>${app.selectedTop.brand}</h4>
-                <p>${app.selectedTop.name}</p>
+                <h4>${escapeHtml(app.selectedTop.brand)}</h4>
+                <p>${escapeHtml(app.selectedTop.name)}</p>
                 ${topLink}
             `;
 
             document.getElementById('bottomDetails').innerHTML = `
-                <h4>${app.selectedBottom.brand}</h4>
-                <p>${app.selectedBottom.name}</p>
+                <h4>${escapeHtml(app.selectedBottom.brand)}</h4>
+                <p>${escapeHtml(app.selectedBottom.name)}</p>
                 ${bottomLink}
             `;
 
@@ -1009,19 +1253,51 @@
             container.style.display = 'block';
             grid.innerHTML = '';
 
-            app.savedOutfits.forEach(outfit => {
+            app.savedOutfits.forEach((outfit, index) => {
                 const card = document.createElement('div');
                 card.className = 'saved-outfit-card';
-                card.innerHTML = `
-                    <button class="remove-outfit-btn" onclick="event.stopPropagation(); removeOutfit(${outfit.id})">×</button>
-                    <div class="saved-outfit-preview">
-                        <img src="${outfit.top.image}" alt="${outfit.top.name}">
-                        <img src="${outfit.bottom.image}" alt="${outfit.bottom.name}">
-                    </div>
-                `;
+                
+                const preview = document.createElement('div');
+                preview.className = 'saved-outfit-preview';
+                
+                const topImg = document.createElement('img');
+                topImg.src = outfit.top.image;
+                topImg.alt = outfit.top.name;
+                topImg.addEventListener('error', function() {
+                    this.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCBmaWxsPSIjRkZFMEU4IiB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIvPjwvc3ZnPg==';
+                });
+                
+                const bottomImg = document.createElement('img');
+                bottomImg.src = outfit.bottom.image;
+                bottomImg.alt = outfit.bottom.name;
+                bottomImg.addEventListener('error', function() {
+                    this.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCBmaWxsPSIjRkZFMEU4IiB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIvPjwvc3ZnPg==';
+                });
+                
+                preview.appendChild(topImg);
+                preview.appendChild(bottomImg);
+                
+                const removeBtn = document.createElement('button');
+                removeBtn.className = 'remove-outfit-btn';
+                removeBtn.textContent = '×';
+                removeBtn.onclick = (e) => {
+                    e.stopPropagation();
+                    removeOutfit(outfit.id);
+                };
+                
+                card.appendChild(removeBtn);
+                card.appendChild(preview);
                 card.onclick = () => loadSavedOutfit(outfit.id);
+                card.style.animationDelay = `${index * 50}ms`;
                 grid.appendChild(card);
             });
+        }
+
+        // Escape HTML
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
         }
 
         // Modal Controls
@@ -1042,32 +1318,47 @@
         document.getElementById('exportBtn').addEventListener('click', exportConfig);
         document.getElementById('importBtn').addEventListener('click', importConfig);
 
-        document.getElementById('loadTopwearFolderBtn').addEventListener('click', () => {
-            const link = document.getElementById('topwearFolderInput').value.trim();
-            if (!link) {
-                alert('Please paste a Google Drive folder link');
-                return;
+        // Keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeSettings();
+            if (e.key === ' ' && e.target === document.body) {
+                e.preventDefault();
+                shuffleOutfit();
             }
-            loadFolderImages(link, 'topwear');
         });
 
-        document.getElementById('loadBottomwearFolderBtn').addEventListener('click', () => {
-            const link = document.getElementById('bottomwearFolderInput').value.trim();
-            if (!link) {
-                alert('Please paste a Google Drive folder link');
-                return;
-            }
-            loadFolderImages(link, 'bottomwear');
-        });
-
-        // Close modal when clicking outside
         document.getElementById('settingsModal').addEventListener('click', (e) => {
             if (e.target.id === 'settingsModal') {
                 closeSettings();
             }
         });
 
-        // Initialize on Load
+        // Add CSS keyframes
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideIn {
+                from {
+                    transform: translateX(400px);
+                    opacity: 0;
+                }
+                to {
+                    transform: translateX(0);
+                    opacity: 1;
+                }
+            }
+            @keyframes slideOut {
+                from {
+                    transform: translateX(0);
+                    opacity: 1;
+                }
+                to {
+                    transform: translateX(400px);
+                    opacity: 0;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+
         window.addEventListener('load', () => {
             renderUI();
         });
