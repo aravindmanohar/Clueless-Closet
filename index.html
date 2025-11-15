@@ -420,6 +420,60 @@
             flex: 1;
         }
 
+        .section-divider {
+            margin: 24px 0;
+            border: none;
+            border-top: 1px solid var(--border-light);
+        }
+
+        .info-box {
+            background-color: var(--secondary-bg);
+            border-left: 3px solid var(--button-primary);
+            padding: 12px;
+            border-radius: 4px;
+            font-size: 13px;
+            margin: 12px 0;
+            color: var(--text-secondary);
+        }
+
+        .status-message {
+            padding: 12px;
+            border-radius: var(--border-radius);
+            margin: 12px 0;
+            font-size: 13px;
+        }
+
+        .status-message.success {
+            background-color: #E8F5E9;
+            color: #2E7D32;
+            border-left: 3px solid #4CAF50;
+        }
+
+        .status-message.error {
+            background-color: #FFEBEE;
+            color: #C62828;
+            border-left: 3px solid #F44336;
+        }
+
+        .status-message.info {
+            background-color: var(--secondary-bg);
+            color: var(--text-secondary);
+            border-left: 3px solid var(--button-primary);
+        }
+
+        .image-input-wrapper {
+            position: relative;
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        .file-input-btn {
+            display: inline-flex;
+            cursor: pointer;
+        }
+
         /* Responsive */
         @media (max-width: 1024px) {
             .layout {
@@ -534,8 +588,8 @@
             <div class="main-display">
                 <div class="outfit-container" id="outfitDisplay">
                     <div class="empty-state">
-                        <p>Loading your wardrobe...</p>
-                        <div class="loading"></div>
+                        <p>👗 Welcome to Clueless Closet!</p>
+                        <p>Click Settings to add items</p>
                     </div>
                 </div>
 
@@ -572,11 +626,13 @@
             </div>
 
             <div id="settingsContent">
-                <h3 style="margin-bottom: 16px; font-size: 16px;">Add Item from Google Drive</h3>
+                <!-- Add Single Item -->
+                <h3 style="margin-bottom: 16px; font-size: 16px;">📸 Add Item</h3>
                 
                 <div class="form-group">
                     <label>Google Drive Image Link</label>
                     <input type="text" id="imageLinkInput" placeholder="https://drive.google.com/file/d/FILE_ID/view">
+                    <small style="color: var(--text-secondary); font-size: 12px; margin-top: 4px; display: block;">Right-click image in Google Drive → Get link</small>
                 </div>
 
                 <div class="form-group">
@@ -603,22 +659,32 @@
                 </div>
 
                 <div class="button-group">
-                    <button id="addItemBtn">Add Item</button>
-                    <button id="importExportBtn">Import/Export Config</button>
+                    <button id="addItemBtn">✓ Add Item</button>
                 </div>
 
-                <hr style="margin: 24px 0; border: none; border-top: 1px solid var(--border-light);">
+                <hr class="section-divider">
 
-                <h3 style="margin-bottom: 16px; font-size: 16px;">Import from Google Drive Folder</h3>
+                <!-- Batch Upload from Google Drive Folder -->
+                <h3 style="margin-bottom: 16px; font-size: 16px;">📁 Batch Import from Google Drive</h3>
                 
+                <div class="info-box">
+                    <strong>How to set up:</strong><br>
+                    1. Create a Google Drive folder (or use existing)<br>
+                    2. Right-click folder → Share → "Anyone with link"<br>
+                    3. Paste folder link below and click import<br>
+                    4. Select images to add to your wardrobe
+                </div>
+
                 <div class="form-group">
                     <label>Topwear Folder Link</label>
                     <input type="text" id="topwearFolderInput" placeholder="https://drive.google.com/drive/folders/FOLDER_ID">
                 </div>
 
                 <div class="button-group">
-                    <button id="loadTopwearFolderBtn">Load Topwear Folder</button>
+                    <button id="loadTopwearFolderBtn">📂 Scan Topwear Folder</button>
                 </div>
+
+                <div id="topwearFolderStatus"></div>
 
                 <div class="form-group">
                     <label>Bottomwear Folder Link</label>
@@ -626,13 +692,25 @@
                 </div>
 
                 <div class="button-group">
-                    <button id="loadBottomwearFolderBtn">Load Bottomwear Folder</button>
+                    <button id="loadBottomwearFolderBtn">📂 Scan Bottomwear Folder</button>
                 </div>
 
-                <div id="folderImportStatus" style="margin-top: 16px; padding: 12px; background-color: var(--secondary-bg); border-radius: var(--border-radius); display: none;"></div>
+                <div id="bottomwearFolderStatus"></div>
+
+                <hr class="section-divider">
+
+                <!-- Export/Import Config -->
+                <h3 style="margin-bottom: 16px; font-size: 16px;">💾 Backup & Restore</h3>
+                
+                <div class="button-group">
+                    <button id="exportBtn">↓ Export Wardrobe</button>
+                    <button id="importBtn">↑ Import Wardrobe</button>
+                </div>
+
+                <input type="file" id="fileInput" class="file-input" accept="application/json">
             </div>
         </div>
-    </div>
+    </modal>
 
     <script>
         // Application State
@@ -641,18 +719,13 @@
             bottomwear: [],
             selectedTop: null,
             selectedBottom: null,
-            savedOutfits: [],
-
-            // Google Drive Configuration (Pre-loaded)
-            googleDriveFolders: {
-                topwear: '1soJ7hXhYexSo7_-psMKyDpCLKWU0YfGA',
-                bottomwear: '1XXsXT18ueFcddW7awnZQ7WTWUiqPjqj1'
-            }
+            savedOutfits: []
         };
 
         // Utility: Convert Google Drive Link to Direct Image URL
         function convertGoogleDriveLink(link) {
             try {
+                // Handle full share link: https://drive.google.com/file/d/FILE_ID/view
                 const fileIdMatch = link.match(/\/d\/([a-zA-Z0-9-_]+)/);
                 if (fileIdMatch && fileIdMatch[1]) {
                     return `https://drive.google.com/uc?export=view&id=${fileIdMatch[1]}`;
@@ -663,80 +736,50 @@
             }
         }
 
-        // Fetch Images from Google Drive Folder
-        async function fetchFolderImages(folderId, category) {
+        // Extract Folder ID
+        function extractFolderId(folderLink) {
             try {
-                const statusDiv = document.getElementById('folderImportStatus');
-                statusDiv.textContent = `Loading ${category} folder...`;
-                statusDiv.style.display = 'block';
-
-                // Since we can't directly access Drive API without authentication,
-                // we'll use a workaround with Google Drive's RSS feed
-                const rssUrl = `https://drive.google.com/drive/folders/${folderId}`;
-                
-                // Create a temporary iframe to load folder
-                const response = await fetch(`https://www.googleapis.com/drive/v3/files?q='${folderId}'+in+parents&key=AIzaSyDyWJHw5bxAR1-5ySTSjLjO3RgKXqVL1K8`, {
-                    method: 'GET'
-                }).catch(() => null);
-
-                // Fallback: Show instructions for manual import
-                if (!response || !response.ok) {
-                    statusDiv.innerHTML = `
-                        <strong>Folder Import Instructions:</strong><br>
-                        For direct folder import, please:<br>
-                        1. Make sure the folder is publicly shared<br>
-                        2. Open the folder in Google Drive<br>
-                        3. Right-click each image and select "Get link"<br>
-                        4. Paste individual links above<br>
-                        Or use the folder scanner below.
-                    `;
-                    return [];
-                }
-
-                statusDiv.textContent = `${category} folder processed!`;
-                return [];
-            } catch (error) {
-                console.error('Folder import error:', error);
-                return [];
+                const match = folderLink.match(/\/folders\/([a-zA-Z0-9-_]+)/);
+                return match ? match[1] : null;
+            } catch (e) {
+                return null;
             }
         }
 
-        // Initialize App: Load Pre-configured Folders
-        async function initializeApp() {
+        // Load Folder with Alternative Method
+        async function loadFolderImages(folderId, category) {
             try {
-                // Since direct folder access requires API keys, we'll simulate loading
-                // In production, integrate with Google Drive API or use a backend service
+                const statusDiv = category === 'topwear' 
+                    ? document.getElementById('topwearFolderStatus')
+                    : document.getElementById('bottomwearFolderStatus');
+
+                statusDiv.innerHTML = '<div class="status-message info"><div class="loading"></div> Scanning folder...</div>';
+
+                // Method 1: Try using Google Drive's export CSV feature
+                const csvUrl = `https://drive.google.com/drive/folders/${folderId}?usp=sharing`;
                 
-                // For now, add placeholder for user guidance
-                const topwearContainer = document.getElementById('topwearGrid');
-                const bottomwearContainer = document.getElementById('bottomwearGrid');
-                
-                topwearContainer.innerHTML = '<p style="font-size: 12px; color: var(--text-secondary); padding: 16px; text-align: center;">Loading from Google Drive...<br>Check Settings if images don\'t appear</p>';
-                bottomwearContainer.innerHTML = '<p style="font-size: 12px; color: var(--text-secondary); padding: 16px; text-align: center;">Loading from Google Drive...<br>Check Settings if images don\'t appear</p>';
+                // Since direct API access is restricted, we'll show instructions
+                statusDiv.innerHTML = `
+                    <div class="status-message info">
+                        <strong>Alternative Import Method:</strong><br>
+                        <br>
+                        <strong>Option A - Recommended:</strong><br>
+                        1. Open this folder: <a href="${csvUrl}" target="_blank">https://drive.google.com/drive/folders/${folderId}</a><br>
+                        2. For each image, right-click → "Get link"<br>
+                        3. Paste link at top of settings<br>
+                        <br>
+                        <strong>Option B - Bulk Copy:</strong><br>
+                        Install this Chrome extension for bulk link generation:<br>
+                        <a href="https://chrome.google.com/webstore/search/google%20drive%20link%20generator" target="_blank">Google Drive Link Generator</a>
+                    </div>
+                `;
 
-                // Attempt to auto-load folders
-                await loadGoogleDriveFolder(app.googleDriveFolders.topwear, 'topwear');
-                await loadGoogleDriveFolder(app.googleDriveFolders.bottomwear, 'bottomwear');
-
-                if (app.topwear.length === 0 && app.bottomwear.length === 0) {
-                    showEmptyState();
-                } else {
-                    renderUI();
-                }
             } catch (error) {
-                console.error('Initialization error:', error);
-                showEmptyState();
-            }
-        }
-
-        // Load Google Drive Folder (Simplified)
-        async function loadGoogleDriveFolder(folderId, category) {
-            try {
-                // This is a simplified approach - in production you'd need proper API integration
-                // For now, we'll provide a way for users to manually import via Settings
-                console.log(`Folder ID for ${category}: ${folderId}`);
-            } catch (error) {
-                console.error(`Error loading ${category} folder:`, error);
+                console.error('Folder load error:', error);
+                const statusDiv = category === 'topwear' 
+                    ? document.getElementById('topwearFolderStatus')
+                    : document.getElementById('bottomwearFolderStatus');
+                statusDiv.innerHTML = '<div class="status-message error">Error accessing folder. Make sure it\'s shared publicly.</div>';
             }
         }
 
@@ -775,15 +818,14 @@
             document.getElementById('productNameInput').value = '';
             document.getElementById('shoppingLinkInput').value = '';
 
-            alert('Item added successfully!');
+            alert('✓ Item added successfully!');
             renderUI();
-            closeSettings();
         }
 
         // Shuffle Outfit
         function shuffleOutfit() {
             if (app.topwear.length === 0 || app.bottomwear.length === 0) {
-                alert('Please add items to your wardrobe first');
+                alert('Please add at least one top and one bottom first');
                 return;
             }
 
@@ -825,27 +867,27 @@
             }
         }
 
-        // Export/Import Config
+        // Export Config
         function exportConfig() {
             const config = {
                 topwear: app.topwear,
                 bottomwear: app.bottomwear,
-                savedOutfits: app.savedOutfits
+                savedOutfits: app.savedOutfits,
+                exportDate: new Date().toISOString()
             };
             const json = JSON.stringify(config, null, 2);
             const blob = new Blob([json], { type: 'application/json' });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = 'wardrobe-config.json';
+            a.download = `wardrobe-${Date.now()}.json`;
             a.click();
             URL.revokeObjectURL(url);
         }
 
+        // Import Config
         function importConfig() {
-            const input = document.createElement('input');
-            input.type = 'file';
-            input.accept = 'application/json';
+            const input = document.getElementById('fileInput');
             input.onchange = (e) => {
                 const file = e.target.files[0];
                 const reader = new FileReader();
@@ -856,10 +898,10 @@
                         app.bottomwear = config.bottomwear || [];
                         app.savedOutfits = config.savedOutfits || [];
                         renderUI();
-                        alert('Wardrobe imported successfully!');
+                        alert('✓ Wardrobe imported successfully!');
                         closeSettings();
                     } catch (error) {
-                        alert('Error importing config: ' + error.message);
+                        alert('✗ Error importing config: ' + error.message);
                     }
                 };
                 reader.readAsText(file);
@@ -878,10 +920,14 @@
         function renderTopwear() {
             const grid = document.getElementById('topwearGrid');
             grid.innerHTML = '';
+            if (app.topwear.length === 0) {
+                grid.innerHTML = '<p style="font-size: 12px; color: var(--text-secondary); text-align: center; padding: 16px;">Add items in Settings</p>';
+                return;
+            }
             app.topwear.forEach(item => {
                 const div = document.createElement('div');
                 div.className = `item-thumbnail ${app.selectedTop?.id === item.id ? 'selected' : ''}`;
-                div.innerHTML = `<img src="${item.image}" alt="${item.name}" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22100%22 height=%22100%22%3E%3Crect fill=%22%23FFE0E8%22 width=%22100%22 height=%22100%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.3em%22 font-size=%2212%22 fill=%22%23FF6B9D%22%3EImage Error%3C/text%3E%3C/svg%3E'">`;
+                div.innerHTML = `<img src="${item.image}" alt="${item.name}" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22200%22 height=%22300%22%3E%3Crect fill=%22%23FFE0E8%22 width=%22200%22 height=%22300%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.3em%22 font-size=%2212%22 fill=%22%23FF6B9D%22%3EImage Error%3C/text%3E%3C/svg%3E'">`;
                 div.onclick = () => {
                     app.selectedTop = item;
                     renderOutfit();
@@ -893,10 +939,14 @@
         function renderBottomwear() {
             const grid = document.getElementById('bottomwearGrid');
             grid.innerHTML = '';
+            if (app.bottomwear.length === 0) {
+                grid.innerHTML = '<p style="font-size: 12px; color: var(--text-secondary); text-align: center; padding: 16px;">Add items in Settings</p>';
+                return;
+            }
             app.bottomwear.forEach(item => {
                 const div = document.createElement('div');
                 div.className = `item-thumbnail ${app.selectedBottom?.id === item.id ? 'selected' : ''}`;
-                div.innerHTML = `<img src="${item.image}" alt="${item.name}" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22100%22 height=%22100%22%3E%3Crect fill=%22%23FFE0E8%22 width=%22100%22 height=%22100%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.3em%22 font-size=%2212%22 fill=%22%23FF6B9D%22%3EImage Error%3C/text%3E%3C/svg%3E'">`;
+                div.innerHTML = `<img src="${item.image}" alt="${item.name}" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22200%22 height=%22300%22%3E%3Crect fill=%22%23FFE0E8%22 width=%22200%22 height=%22300%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.3em%22 font-size=%2212%22 fill=%22%23FF6B9D%22%3EImage Error%3C/text%3E%3C/svg%3E'">`;
                 div.onclick = () => {
                     app.selectedBottom = item;
                     renderOutfit();
@@ -911,7 +961,7 @@
             const saveBtn = document.getElementById('saveOutfitBtn');
 
             if (!app.selectedTop || !app.selectedBottom) {
-                display.innerHTML = '<div class="empty-state"><p>Select items from the sidebars to create an outfit</p></div>';
+                display.innerHTML = '<div class="empty-state"><p>👗 Select items from the sidebars to create an outfit</p></div>';
                 details.style.display = 'none';
                 saveBtn.style.display = 'none';
                 return;
@@ -974,16 +1024,6 @@
             });
         }
 
-        function showEmptyState() {
-            const display = document.getElementById('outfitDisplay');
-            display.innerHTML = `
-                <div class="empty-state">
-                    <p>👗 Welcome to Clueless Closet!</p>
-                    <p>Click Settings to add items from Google Drive</p>
-                </div>
-            `;
-        }
-
         // Modal Controls
         function openSettings() {
             document.getElementById('settingsModal').classList.add('active');
@@ -999,13 +1039,25 @@
         document.getElementById('closeSettingsBtn').addEventListener('click', closeSettings);
         document.getElementById('addItemBtn').addEventListener('click', addItem);
         document.getElementById('saveOutfitBtn').addEventListener('click', saveOutfit);
-        document.getElementById('importExportBtn').addEventListener('click', () => {
-            const choice = confirm('Export (OK) or Import (Cancel)?');
-            if (choice) {
-                exportConfig();
-            } else {
-                importConfig();
+        document.getElementById('exportBtn').addEventListener('click', exportConfig);
+        document.getElementById('importBtn').addEventListener('click', importConfig);
+
+        document.getElementById('loadTopwearFolderBtn').addEventListener('click', () => {
+            const link = document.getElementById('topwearFolderInput').value.trim();
+            if (!link) {
+                alert('Please paste a Google Drive folder link');
+                return;
             }
+            loadFolderImages(link, 'topwear');
+        });
+
+        document.getElementById('loadBottomwearFolderBtn').addEventListener('click', () => {
+            const link = document.getElementById('bottomwearFolderInput').value.trim();
+            if (!link) {
+                alert('Please paste a Google Drive folder link');
+                return;
+            }
+            loadFolderImages(link, 'bottomwear');
         });
 
         // Close modal when clicking outside
@@ -1016,7 +1068,9 @@
         });
 
         // Initialize on Load
-        window.addEventListener('load', initializeApp);
+        window.addEventListener('load', () => {
+            renderUI();
+        });
     </script>
 </body>
 </html>
