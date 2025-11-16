@@ -1,6 +1,7 @@
 // ==================== STORAGE CONSTANTS ====================
 const STORAGE_KEY = 'clueless-closet-wardrobe';
 const MAX_IMAGE_SIZE = 5 * 1024 * 1024; // 5MB
+const STORAGE_LIMIT = 5 * 1024 * 1024; // 5MB total limit
 
 // ==================== APP STATE ====================
 const app = {
@@ -12,6 +13,20 @@ const app = {
 };
 
 // ==================== STORAGE FUNCTIONS ====================
+
+/**
+ * Calculate localStorage usage
+ */
+function getStorageUsage() {
+    try {
+        const stored = localStorage.getItem(STORAGE_KEY);
+        if (!stored) return 0;
+        // Rough estimate: 1 character ≈ 1 byte
+        return Math.round((stored.length / 1024 / 1024) * 100) / 100;
+    } catch (error) {
+        return 0;
+    }
+}
 
 /**
  * Save wardrobe data to localStorage
@@ -29,7 +44,7 @@ function saveToLocalStorage() {
         console.log('✓ Data saved to localStorage');
     } catch (error) {
         if (error.name === 'QuotaExceededError') {
-            showNotification('⚠️ Storage limit exceeded! Consider clearing old items.', 'error');
+            showNotification('⚠️ Storage limit exceeded! Delete some items to free up space.', 'error');
         } else {
             showNotification('✗ Error saving data', 'error');
         }
@@ -66,6 +81,7 @@ function updateStorageInfo() {
     const totalItems = app.topwear.length + app.bottomwear.length;
     document.getElementById('itemCount').textContent = totalItems;
     document.getElementById('outfitCount').textContent = app.savedOutfits.length;
+    document.getElementById('storageUsed').textContent = getStorageUsage();
 }
 
 /**
@@ -100,10 +116,10 @@ function fileToBase64(file) {
  * Validate image file
  */
 function validateImageFile(file) {
-    const validTypes = ['image/jpeg', 'image/png', 'image/webp'];
+    const validTypes = ['image/jpeg', 'image/png'];
     
     if (!validTypes.includes(file.type)) {
-        showNotification('✗ Only JPG, PNG, and WebP images are supported', 'error');
+        showNotification('✗ Only JPG and PNG images are supported', 'error');
         return false;
     }
     
@@ -188,7 +204,7 @@ function createImageElement(src, alt) {
 // ==================== ITEM MANAGEMENT ====================
 
 /**
- * Add new item to wardrobe
+ * Add single item to wardrobe
  */
 async function addItem() {
     const imageFile = document.getElementById('imageUpload').files[0];
@@ -237,6 +253,74 @@ async function addItem() {
     } catch (error) {
         console.error('Error adding item:', error);
         showNotification('✗ Error processing image', 'error');
+    }
+}
+
+/**
+ * Bulk import multiple images
+ */
+async function bulkImportImages() {
+    const files = document.getElementById('bulkImageImport').files;
+    const category = document.getElementById('bulkCategorySelect').value;
+
+    if (files.length === 0) {
+        showNotification('Please select at least one image', 'error');
+        return;
+    }
+
+    try {
+        let successCount = 0;
+        let failCount = 0;
+
+        for (let i = 0; i < files.length; i++) {
+            const file = files[i];
+
+            if (!validateImageFile(file)) {
+                failCount++;
+                continue;
+            }
+
+            try {
+                const base64Image = await fileToBase64(file);
+                
+                // Extract filename without extension as default name
+                const fileName = file.name.split('.')[0];
+                
+                const newItem = {
+                    id: Date.now() + i,
+                    brand: 'Imported',
+                    name: fileName,
+                    image: base64Image,
+                    link: null,
+                    source: 'local',
+                    uploadedAt: new Date().toISOString()
+                };
+
+                if (category === 'topwear') {
+                    app.topwear.push(newItem);
+                } else {
+                    app.bottomwear.push(newItem);
+                }
+
+                successCount++;
+            } catch (error) {
+                console.error(`Error processing ${file.name}:`, error);
+                failCount++;
+            }
+        }
+
+        // Clear form
+        document.getElementById('bulkImageImport').value = '';
+
+        saveToLocalStorage();
+        const message = failCount > 0 
+            ? `✓ Imported ${successCount} items (${failCount} failed)`
+            : `✓ Successfully imported ${successCount} items!`;
+        showNotification(message, 'success');
+        renderUI();
+    } catch (error) {
+        console.error('Bulk import error:', error);
+        showNotification('✗ Error during bulk import', 'error');
     }
 }
 
@@ -526,6 +610,7 @@ document.getElementById('shuffleBtn').addEventListener('click', shuffleOutfit);
 document.getElementById('settingsBtn').addEventListener('click', openSettings);
 document.getElementById('closeSettingsBtn').addEventListener('click', closeSettings);
 document.getElementById('addItemBtn').addEventListener('click', addItem);
+document.getElementById('bulkImportBtn').addEventListener('click', bulkImportImages);
 document.getElementById('saveOutfitBtn').addEventListener('click', saveOutfit);
 document.getElementById('exportBtn').addEventListener('click', exportWardrobe);
 document.getElementById('importBtn').addEventListener('click', importWardrobe);
