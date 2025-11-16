@@ -3,6 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
     <title>Clueless Closet - Outfit Mixer</title>
     <style>
         * {
@@ -648,8 +651,22 @@
             border-top: 2px solid var(--border-light);
         }
 
+        .info-text {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-top: 8px;
+        }
+
         .file-input {
             display: none;
+        }
+
+        .danger-btn {
+            background-color: #FF6B6B !important;
+        }
+
+        .danger-btn:hover {
+            background-color: #FF5252 !important;
         }
 
         /* ==================== ANIMATIONS ==================== */
@@ -882,7 +899,7 @@
                 <div class="form-group">
                     <label>Google Drive Image Link</label>
                     <input type="text" id="imageLinkInput" placeholder="https://drive.google.com/file/d/FILE_ID/view">
-                    <small style="color: var(--text-secondary); font-size: 12px; margin-top: 4px; display: block;">Right-click image in Google Drive → Get link</small>
+                    <p class="info-text">Right-click image in Google Drive → Get link</p>
                 </div>
 
                 <div class="form-group">
@@ -921,21 +938,90 @@
                     <button id="importBtn"><span>↑ Import</span></button>
                 </div>
 
+                <p class="info-text">Export saves your wardrobe as a JSON file. Import to restore it.</p>
+
                 <input type="file" id="fileInput" class="file-input" accept="application/json">
+
+                <hr class="section-divider">
+
+                <h3 style="margin-bottom: 16px; font-size: 16px; font-weight: 700;">ℹ️ Storage Info</h3>
+                
+                <div style="background: var(--secondary-bg); padding: 12px; border-radius: var(--border-radius); margin-bottom: 16px; font-size: 12px;">
+                    <p><strong>Stored Items:</strong> <span id="itemCount">0</span></p>
+                    <p><strong>Saved Outfits:</strong> <span id="outfitCount">0</span></p>
+                    <p style="margin-top: 8px; color: var(--text-secondary); font-size: 11px;">Your wardrobe is automatically saved on this device.</p>
+                </div>
+
+                <hr class="section-divider">
+
+                <h3 style="margin-bottom: 16px; font-size: 16px; font-weight: 700;">⚠️ Danger Zone</h3>
+
+                <div class="button-group">
+                    <button id="clearDataBtn" class="danger-btn"><span>🗑️ Clear All Data</span></button>
+                </div>
+
+                <p class="info-text">This will permanently delete all your saved items and outfits.</p>
             </div>
         </div>
     </div>
 
     <script>
-        // Create error placeholder element
-        function createErrorPlaceholder() {
-            const div = document.createElement('div');
-            div.className = 'error-placeholder';
-            div.innerHTML = '<div class="error-icon">⚠️</div><div>Unable to load image</div>';
-            return div;
+        // ==================== STORAGE SYSTEM ====================
+        const STORAGE_KEY = 'clueless-closet-wardrobe';
+
+        // Save data to localStorage
+        function saveToLocalStorage() {
+            const data = {
+                topwear: app.topwear,
+                bottomwear: app.bottomwear,
+                savedOutfits: app.savedOutfits,
+                savedAt: new Date().toISOString()
+            };
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+            updateStorageInfo();
         }
 
-        // Application State
+        // Load data from localStorage
+        function loadFromLocalStorage() {
+            const stored = localStorage.getItem(STORAGE_KEY);
+            if (stored) {
+                try {
+                    const data = JSON.parse(stored);
+                    app.topwear = data.topwear || [];
+                    app.bottomwear = data.bottomwear || [];
+                    app.savedOutfits = data.savedOutfits || [];
+                    console.log('✓ Wardrobe loaded from device');
+                    return true;
+                } catch (error) {
+                    console.error('Error loading wardrobe:', error);
+                    return false;
+                }
+            }
+            return false;
+        }
+
+        // Update storage info display
+        function updateStorageInfo() {
+            const totalItems = app.topwear.length + app.bottomwear.length;
+            document.getElementById('itemCount').textContent = totalItems;
+            document.getElementById('outfitCount').textContent = app.savedOutfits.length;
+        }
+
+        // Clear all data
+        function clearLocalStorage() {
+            if (confirm('⚠️ Are you sure you want to delete ALL saved items and outfits? This cannot be undone.')) {
+                localStorage.removeItem(STORAGE_KEY);
+                app.topwear = [];
+                app.bottomwear = [];
+                app.savedOutfits = [];
+                app.selectedTop = null;
+                app.selectedBottom = null;
+                renderUI();
+                showNotification('✓ All data cleared', 'success');
+            }
+        }
+
+        // ==================== APP STATE ====================
         const app = {
             topwear: [],
             bottomwear: [],
@@ -944,7 +1030,7 @@
             savedOutfits: []
         };
 
-        // Utility: Convert Google Drive Link to Direct Image URL
+        // ==================== UTILITIES ====================
         function convertGoogleDriveLink(link) {
             try {
                 const fileIdMatch = link.match(/\/d\/([a-zA-Z0-9-_]+)/);
@@ -957,7 +1043,6 @@
             }
         }
 
-        // Show Notification
         function showNotification(message, type = 'info') {
             const notification = document.createElement('div');
             const bgColor = type === 'success' ? '#E8F5E9' : type === 'error' ? '#FFEBEE' : '#F5F5F5';
@@ -977,6 +1062,7 @@
                 font-weight: 500;
                 z-index: 2000;
                 animation: slideIn 0.3s ease;
+                max-width: 300px;
             `;
             notification.textContent = message;
             document.body.appendChild(notification);
@@ -987,7 +1073,33 @@
             }, 3000);
         }
 
-        // Add Item to Wardrobe
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function createErrorPlaceholder() {
+            const div = document.createElement('div');
+            div.className = 'error-placeholder';
+            div.innerHTML = '<div class="error-icon">⚠️</div><div>Unable to load image</div>';
+            return div;
+        }
+
+        function createImageElement(src, alt) {
+            const img = document.createElement('img');
+            img.src = src;
+            img.alt = alt;
+            img.loading = 'lazy';
+            img.addEventListener('error', function() {
+                if (this.parentNode) {
+                    this.parentNode.replaceChild(createErrorPlaceholder(), this);
+                }
+            });
+            return img;
+        }
+
+        // ==================== ITEM MANAGEMENT ====================
         function addItem() {
             const imageLink = document.getElementById('imageLinkInput').value.trim();
             const brand = document.getElementById('brandInput').value.trim();
@@ -1021,11 +1133,11 @@
             document.getElementById('productNameInput').value = '';
             document.getElementById('shoppingLinkInput').value = '';
 
+            saveToLocalStorage();
             showNotification('✓ Item added successfully!', 'success');
             renderUI();
         }
 
-        // Shuffle Outfit
         function shuffleOutfit() {
             if (app.topwear.length === 0 || app.bottomwear.length === 0) {
                 showNotification('Please add at least one top and one bottom first', 'error');
@@ -1037,7 +1149,6 @@
             renderOutfit();
         }
 
-        // Save Outfit
         function saveOutfit() {
             if (!app.selectedTop || !app.selectedBottom) {
                 showNotification('Please select a complete outfit first', 'error');
@@ -1051,17 +1162,17 @@
             };
 
             app.savedOutfits.push(outfit);
+            saveToLocalStorage();
             showNotification('❤️ Outfit saved!', 'success');
             renderUI();
         }
 
-        // Remove Saved Outfit
         function removeOutfit(outfitId) {
             app.savedOutfits = app.savedOutfits.filter(o => o.id !== outfitId);
+            saveToLocalStorage();
             renderUI();
         }
 
-        // Load Saved Outfit
         function loadSavedOutfit(outfitId) {
             const outfit = app.savedOutfits.find(o => o.id === outfitId);
             if (outfit) {
@@ -1071,7 +1182,6 @@
             }
         }
 
-        // Export Config
         function exportConfig() {
             const config = {
                 topwear: app.topwear,
@@ -1084,13 +1194,12 @@
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = `wardrobe-${Date.now()}.json`;
+            a.download = `clueless-closet-backup-${Date.now()}.json`;
             a.click();
             URL.revokeObjectURL(url);
             showNotification('✓ Wardrobe exported!', 'success');
         }
 
-        // Import Config
         function importConfig() {
             const input = document.getElementById('fileInput');
             input.onchange = (e) => {
@@ -1104,6 +1213,7 @@
                         app.topwear = config.topwear || [];
                         app.bottomwear = config.bottomwear || [];
                         app.savedOutfits = config.savedOutfits || [];
+                        saveToLocalStorage();
                         renderUI();
                         showNotification('✓ Wardrobe imported successfully!', 'success');
                         closeSettings();
@@ -1116,33 +1226,13 @@
             input.click();
         }
 
-        // Escape HTML
-        function escapeHtml(text) {
-            const div = document.createElement('div');
-            div.textContent = text;
-            return div.innerHTML;
-        }
-
-        // Create Image Element with Error Handler
-        function createImageElement(src, alt) {
-            const img = document.createElement('img');
-            img.src = src;
-            img.alt = alt;
-            img.loading = 'lazy';
-            img.addEventListener('error', function() {
-                if (this.parentNode) {
-                    this.parentNode.replaceChild(createErrorPlaceholder(), this);
-                }
-            });
-            return img;
-        }
-
-        // Render UI
+        // ==================== RENDERING ====================
         function renderUI() {
             renderTopwear();
             renderBottomwear();
             renderOutfit();
             renderSavedOutfits();
+            updateStorageInfo();
         }
 
         function renderTopwear() {
@@ -1276,8 +1366,9 @@
             });
         }
 
-        // Modal Controls
+        // ==================== MODAL CONTROLS ====================
         function openSettings() {
+            updateStorageInfo();
             document.getElementById('settingsModal').classList.add('active');
         }
 
@@ -1285,7 +1376,7 @@
             document.getElementById('settingsModal').classList.remove('active');
         }
 
-        // Event Listeners
+        // ==================== EVENT LISTENERS ====================
         document.getElementById('shuffleBtn').addEventListener('click', shuffleOutfit);
         document.getElementById('settingsBtn').addEventListener('click', openSettings);
         document.getElementById('closeSettingsBtn').addEventListener('click', closeSettings);
@@ -1293,6 +1384,7 @@
         document.getElementById('saveOutfitBtn').addEventListener('click', saveOutfit);
         document.getElementById('exportBtn').addEventListener('click', exportConfig);
         document.getElementById('importBtn').addEventListener('click', importConfig);
+        document.getElementById('clearDataBtn').addEventListener('click', clearLocalStorage);
 
         // Keyboard shortcuts
         document.addEventListener('keydown', (e) => {
@@ -1309,8 +1401,11 @@
             }
         });
 
-        // Initialize
+        // ==================== INITIALIZATION ====================
         window.addEventListener('load', () => {
+            if (!loadFromLocalStorage()) {
+                console.log('No saved wardrobe found, starting fresh');
+            }
             renderUI();
         });
     </script>
