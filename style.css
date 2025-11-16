@@ -597,7 +597,9 @@ button span {
     letter-spacing: 0.5px;
 }
 
-.form-group input,
+.form-group input[type="file"],
+.form-group input[type="text"],
+.form-group input[type="url"],
 .form-group select,
 .form-group textarea {
     width: 100%;
@@ -611,7 +613,9 @@ button span {
     color: var(--text-primary);
 }
 
-.form-group input:focus,
+.form-group input[type="file"]:focus,
+.form-group input[type="text"]:focus,
+.form-group input[type="url"]:focus,
 .form-group select:focus,
 .form-group textarea:focus {
     outline: none;
@@ -641,8 +645,22 @@ button span {
     border-top: 2px solid var(--border-light);
 }
 
+.info-text {
+    font-size: 12px;
+    color: var(--text-secondary);
+    margin-top: 8px;
+}
+
 .file-input {
     display: none;
+}
+
+.danger-btn {
+    background-color: #FF6B6B !important;
+}
+
+.danger-btn:hover {
+    background-color: #FF5252 !important;
 }
 
 /* ==================== ANIMATIONS ==================== */
